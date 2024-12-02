@@ -173,7 +173,7 @@ if doFinalMerge:
             for file in Table_merged_list:
                 f.write(file + '\n')
         inputName = inputName.replace(".root", "_merged.root")
-        command = f"o2-aod-merger --input {inputdir}/input.txt --output {inputdir}/{inputName} --max-size 10000000000"
+        command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
         os.system(command)
     else:
         inputNameTable = inputName.replace(".root", "_DFmerged_tableMerged.root")
@@ -182,5 +182,5 @@ if doFinalMerge:
             for iFile, file in enumerate(Table_merged_list):
                 f.write(file + '\n')
         inputName = inputName.replace(".root", "_merged.root")
-        command = f"o2-aod-merger --input {inputdir}/input.txt --output {inputdir}/{inputName} --max-size 10000000000"
+        command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
         os.system(command)
