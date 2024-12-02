@@ -1,0 +1,217 @@
+input:
+  prompt:
+    [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/McTreeForMLPromptTrain_meidum_PIDcut.root]
+  FD:
+    [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/McTreeForMLFDTrain_medium_PIDcut.root]
+  data: [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/DataTreeForMLTrain_PIDcut.root]
+  treename: TreeForML
+
+data_prep:
+  channel: D0ToKPi # options: D0ToKPi, DplusToPiKPi, DsToKKPi, LcToPKPi, XicToPKPi
+  filt_bkg_mass: fM > 1.5   # pandas query to select bkg candidates
+  class_balance:
+    option: equal # change how the dataset is built, options available: 'equal', 'max_signal'
+      # 'equal' -> same number of prompt/FD/bkg (not using all the signal available)
+      # 'max_signal' -> try to use all the signal (prompt and FD) + add n_bkg = 2 * (n_prompt + n_FD)
+    # bkg_factor: [1., 1., 1., 1., 1., 1.] # list of multipliers for (nPrompt + nFD) used to determine nCandBkg in the 'max_signal' option
+    bkg_factor: [1., 1., 1., 1., 1., 1.]
+  seed_split: 42  
+  #test_fraction: 0.3
+  test_fraction: 0.3
+
+pt_ranges:
+  min: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
+  # min: [1]  # list
+  max: [2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]  # list
+  # max: [2]  # list
+
+ml:
+  raw_output: false
+  roc_auc_approach: ovo
+  roc_auc_average: macro
+  # training_vars: [fDecayLength, fDecayLengthXY, fCpa, fCpaXY, fImpactParameterProduct]
+  # training_vars: [fCpa, fCpaXY, fDecayLength, fDecayLengthXY, fImpactParameterProduct]
+  # training_vars: ["fCpa", "fCpaXY", 
+  # "fDecayLength", "fDecayLengthXY",
+  #   "fImpactParameterProduct",
+  #     "fNSigTpcTofPi0", "fNSigTpcTofPi1", "fNSigTpcTofKa0", "fNSigTpcTofKa1"]
+  # training_vars: [cpa, cpaXY, decayLength, decayLengthXY, impactParameterProduct]
+  training_vars: ["fDecayLengthXY", "fDecayLengthXYNormalised", "fCpaXY", "fImpactParameterProduct", 
+  "fNSigTpcTofPiExpPi", "fNSigTpcTofKaExpKa"]
+
+  hyper_pars: [
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    }, 
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    } 
+    
+    ]
+  hyper_pars_opt:
+    # activate: false
+    activate: true
+    ntrials: 10
+    njobs: 30
+    timeout: 1800
+    hyper_par_ranges:
+      {
+        "max_depth": !!python/tuple [2, 4],
+        "learning_rate": !!python/tuple [0.005, 0.03],
+        "n_estimators": !!python/tuple [300, 1800],
+        "min_child_weight": !!python/tuple [1, 10],
+        "subsample": !!python/tuple [0.7, 1.],
+        "colsample_bytree": !!python/tuple [0.7, 1.]
+      }
+  saved_models: [
+            
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_1_2.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_2_3.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_3_4.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_4_5.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_5_6.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_6_7.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_7_8.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_8_10.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_10_12.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_12_16.pickle,
+            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/Training_PID_med/pt1_2/ModelHandler_D0ToKPi_pT_16_24.pickle
+          ]
+
+
+output:
+  # dir: Training_PID_meds_hp
+  # dir: applys
+  #dir: Models_test/test
+  # dir: ModelForTest
+  dir: ./Training_PID_med
+  leg_labels: # legend labels, keep the right number of classes
+    Bkg: Background
+    Prompt: Prompt
+    FD: NonPrompt
+  out_labels: # output labels, keep the right number of classes
+    Bkg: Bkg
+    Prompt: Prompt
+    FD: NonPrompt
+  
+plots:
+    # plotting_columns: ["fDecayLength", "fDecayLengthXY", "fCpa", "fCpaXY", "fImpactParameterProduct", "fM", "fPt"]
+    plotting_columns: ["fDecayLengthXY", "fDecayLengthXYNormalised", "fCpaXY", "fImpactParameterProduct", 
+  "fNSigTpcTofPiExpPi", "fNSigTpcTofKaExpKa", "fM", "fPt"]
+    # plotting_columns: ["cpa", "cpaXY", "decayLength", "decayLengthXY", "impactParameterProduct", "fM", "fPt"]
+                       # list of variables to plot
+    train_test_log: True # use log scale for plots of train and test distributions
+
+apply: 
+    # column_to_save_list: ["fDecayLength", "fDecayLengthXY", "fCpa", "fCpaXY", "fImpactParameterProduct", "fM", "fPt"]
+    column_to_save_list: ["fDecayLengthXY", "fDecayLengthXYNormalised", "fCpaXY", "fImpactParameterProduct", 
+  "fNSigTpcTofPiExpPi", "fNSigTpcTofKaExpKa",
+  "fM", "fPt", "fFlagMc", "fOriginMcRec", "fCandidateSelFlag"]
+    # column_to_save_list: ["cpa", "cpaXY", "decayLength", "decayLengthXY", "impactParameterProduct", "fM", "fPt"]
+    # list of variables saved in the dataframes with the applied models 

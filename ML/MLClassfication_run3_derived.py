@@ -13,7 +13,6 @@ import os
 import sys
 import argparse
 import pickle
-# import plotly
 import numpy as np
 import pandas as pd
 import xgboost as xgb
@@ -108,7 +107,7 @@ def data_prep(inputConfig, iBin, ptBin, outputDirPt, promptDf, fdDf, bkgDf): #py
             print((f'Remaining FD candidates ({nFD - nCandToKeep}) will be used for the '
                    'efficiency together with test set'))
 
-        TotalDf = pd.concat([bkgDf.iloc[:nCandToKeep], promptDf.iloc[:nCandToKeep], fdDf.iloc[:nCandToKeep]], sort=True)
+        TotalDf = pd.concat([bkgDf.iloc[:nCandToKeep], fdDf.iloc[:nCandToKeep], promptDf.iloc[:nCandToKeep]], sort=True)
         if fdDf.empty:
             labelsArray = np.array([0]*nCandToKeep + [1]*nCandToKeep)
         else:
@@ -140,7 +139,7 @@ def data_prep(inputConfig, iBin, ptBin, outputDirPt, promptDf, fdDf, bkgDf): #py
             print('\033[93mWARNING: using all bkg available, not good!\033[0m')
         print(f'Fraction of real data candidates used for ML: {nCandBkg/nBkg:.5f}')
 
-        TotalDf = pd.concat([bkgDf.iloc[:nCandBkg], promptDf, fdDf], sort=True)
+        TotalDf = pd.concat([bkgDf.iloc[:nCandBkg], fdDf, promptDf], sort=True)
         if fdDf.empty:
             labelsArray = np.array([0]*nCandBkg + [1]*nPrompt)
         else:
@@ -166,14 +165,12 @@ def data_prep(inputConfig, iBin, ptBin, outputDirPt, promptDf, fdDf, bkgDf): #py
     # plots
     varsToDraw = inputConfig['plots']['plotting_columns']
     legLabels = [inputConfig['output']['leg_labels']['Bkg'],
+                 inputConfig['output']['leg_labels']['FD'],
                  inputConfig['output']['leg_labels']['Prompt']]
-    if inputConfig['output']['leg_labels']['FD'] is not None:
-        legLabels.append(inputConfig['output']['leg_labels']['FD'])
     outputLabels = [inputConfig['output']['out_labels']['Bkg'],
+                    inputConfig['output']['out_labels']['FD'],
                     inputConfig['output']['out_labels']['Prompt']]
-    if inputConfig['output']['out_labels']['FD'] is not None:
-        outputLabels.append(inputConfig['output']['out_labels']['FD'])
-    listDf = [bkgDf, promptDf] if fdDf.empty else [bkgDf, promptDf, fdDf]
+    listDf = [bkgDf, promptDf] if fdDf.empty else [bkgDf, fdDf, promptDf]
     #_____________________________________________
     plot_utils.plot_distr(listDf, varsToDraw, 100, legLabels, figsize=(12, 7),
                           alpha=0.3, log=True, grid=False, density=True)
@@ -474,7 +471,7 @@ def train_test(inputConfig, ptBin, outputDirPt, trainTestData, iBin): #pylint: d
     '''
     nClasses = len(np.unique(trainTestData[3]))
     channel = inputConfig["data_prep"]["channel"]
-    modelClf = xgb.XGBClassifier(use_label_encoder=False)
+    modelClf = xgb.XGBClassifier()
     # modelClf = xgb.XGBClassifier()
     trainCols = inputConfig['ml']['training_vars']
     hyperPars = inputConfig['ml']['hyper_pars'][iBin]
@@ -539,13 +536,12 @@ def train_test(inputConfig, ptBin, outputDirPt, trainTestData, iBin): #pylint: d
 
     #plots
     legLabels = [inputConfig['output']['leg_labels']['Bkg'],
+                 inputConfig['output']['leg_labels']['FD'],
                  inputConfig['output']['leg_labels']['Prompt']]
-    if inputConfig['output']['leg_labels']['FD'] is not None:
-        legLabels.append(inputConfig['output']['leg_labels']['FD'])
     outputLabels = [inputConfig['output']['out_labels']['Bkg'],
+                    inputConfig['output']['out_labels']['FD'],
                     inputConfig['output']['out_labels']['Prompt']]
-    if inputConfig['output']['out_labels']['FD'] is not None:
-        outputLabels.append(inputConfig['output']['out_labels']['FD'])
+    # if inputConfig['output']['leg_labels']['FD'] is not None:trainTestData
     #_____________________________________________
     plt.rcParams["figure.figsize"] = (10, 7)
     outputFigML = plot_utils.plot_output_train_test(modelHandler, trainTestData, 80, inputConfig['ml']['raw_output'],
@@ -574,17 +570,12 @@ def train_test(inputConfig, ptBin, outputDirPt, trainTestData, iBin): #pylint: d
     plt.rcParams["figure.figsize"] = (12, 7)
     featuresImportanceFig = plot_utils.plot_feature_imp(trainTestData[2][trainCols], trainTestData[3], modelHandler,
                                                         legLabels)
-
-    # plt.rcParams["figure.figsize"] = (12, 7)
-    # featuresImportanceFig = plot_utils.plot_feature_imp(trainTestData[2][trainCols], trainTestData[3], modelHandler, legLabels, 100000,False)
-
-    # # # fig_feat_importance = plot_utils.plot_feature_imp(
-    # # #     train_test_data[2][train_test_data[0].columns],
-    # # #     train_test_data[2][training_vars],
-    # # #     train_test_data[3],
-    # # #     model_hdl,
-    # # #     leg_labels
-
+    # fig_feat_importance = plot_utils.plot_feature_imp(
+    #     train_test_data[2][train_test_data[0].columns],
+    #     train_test_data[2][training_vars],
+    #     train_test_data[3],
+    #     model_hdl,
+    #     leg_labels
     nPlot = nClasses if nClasses > 2 else 1
     for iFig, fig in enumerate(featuresImportanceFig):
         if iFig < nPlot:

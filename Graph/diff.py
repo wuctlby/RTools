@@ -5,7 +5,7 @@ from ROOT import TCanvas, TFile, TLegend, TGaxis, TGraph, TGraphAsymmErrors, TLa
 from ROOT import gROOT, gPad, kGreen, kBlack, kRed, kAzure, kGray, kOrange, kMagenta, kBlue, kCyan, kSpring # pylint: disable=import-error,no-name-in-module
 from ROOT import kFullCircle, kFullSquare, kOpenCircle, kOpenSquare, kOpenTriangleUp, kOpenTriangleDown, kOpenDiamond, kOpenCross, kOpenStar, kOpenStar, kOpenStar, kOpenStar, kOpenStar # pylint: disable=import-error,no-name-in-module
 
-sys.path.append('/home/wuct/localAnalysis/flow/DmesonAnalysis/')
+sys.path.append('../../')
 from utils.StyleFormatter import SetGlobalStyle, SetObjectStyle, DivideCanvas
 
 def getCorrError(deltaNum, deltaDen, Num, Den):
@@ -23,16 +23,24 @@ def getCorrError(deltaNum, deltaDen, Num, Den):
 # histNames = ['hvnSimFit', 'hvnSimFit', 'hvnSimFit', 'hvnSimFit', 'hvnSimFit', 'hvnSimFit']
 # iRefFile = 0
 
-inputFileNames = [ '/home/wuct/localAnalysis/flow/stefano/DmesonAnalysis/run3/flow/PromptVn/promptvn_withsyst_3050_set3_pol2.root',
-                  '/home/wuct/localAnalysis/flow/stefano/DmesonAnalysis/run3/flow/PromptVn/promptvn_withsyst_3050_pass4_effPass3Set3_noWeight.root']
-histNames = ['gVnPromptSystTot', 'gVnPromptSystTot']
+inputFileNames = [ '/home/wuct/ALICE/local/DmesonAnalysis/run3/flow/Results/2060/k3050/small/sp/resolution/resosp3050s_291131_inte_gain_Reso.root',
+                  '/home/wuct/ALICE/local/DmesonAnalysis/run3/flow/Results/2060/k3050/medium/sp/resolution/resosp3050m_293294_med_inte_gain_Reso.root']
+histPaths = 'FT0c_FV0a_TPCtot'
+histNames = ['histo_reso', 'histo_reso']
 iRefFile = 0
 
 # Load input files
 histos = []
 for iFile, file in enumerate(inputFileNames):
     inputFile = TFile(f'{file}', 'r')
-    hist = inputFile.Get(histNames[iFile])
+    if histPaths == '':
+        hist = inputFile.Get(histNames[iFile])
+    else:
+        hist = inputFile.Get(f'{histPaths}/{histNames[iFile]}')
+        print(hist)
+    if hist == None:
+        print(f'Cannot find {histPaths}/{histNames[iFile]} in {file}')
+        sys.exit(1)
     print(str(type(hist)).split('.')[-1].split(' ')[0])
     if str(type(hist)).split('.')[-1].split(' ')[0] != 'TGraphAsymmErrors':
         hist.SetDirectory(0)
@@ -96,8 +104,8 @@ for i in range(len(inputFileNames)):
 # create canvas
 ## absolute difference
 cAbsDiff = TCanvas('Abs_diff', 'Absolute difference', 800, 800)
-cAbsDiff.DrawFrame(1, -0.05, 12, 0.05, ';#it{p}_{T} (GeV/#it{c}); Absolute difference')
-cAbsDiff.SetLogx()
+cAbsDiff.DrawFrame(0, -0.05, 100, 0.05, ';#it{p}_{T} (GeV/#it{c}); Absolute difference')
+#cAbsDiff.SetLogx()
 
 Line = TLine()
 Line.SetLineColor(kGray)
@@ -112,8 +120,8 @@ cAbsDiff.Draw()
 
 ## relative difference
 cRelDiff = TCanvas('Rel_diff', 'Relative difference', 800, 800)
-cRelDiff.DrawFrame(1, 0, 12, 2, ';#it{p}_{T} (GeV/#it{c}); Relative difference')
-cRelDiff.SetLogx()
+cRelDiff.DrawFrame(0, 0.98, 100, 1.02, ';#it{p}_{T} (GeV/#it{c}); Relative difference')
+#cRelDiff.SetLogx()
 
 # Line = TLine()
 # Line.SetLineColor(kGray)
