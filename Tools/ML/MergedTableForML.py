@@ -76,7 +76,7 @@ def merge_DF_singeFile(inputdirs, inputName, doMerge=True):
                     DF_merged_list.extend(merge_DF_singeFile([inputdir + '/' + key], inputName, False))
     return DF_merged_list
 
-def merge_tables_for_ml(path_to_file, isMC, findDF=True):
+def merge_tables_for_ml(path_to_file, isMC, findDF=False):
 
     DFName = Get_DFName(path_to_file)
 
@@ -125,45 +125,41 @@ def merge_tables_for_ml(path_to_file, isMC, findDF=True):
 # inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/297182'
 # inputName = "AO2D.root"
 
+# inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/303753'
+# inputName = "AO2D.root"
+
 inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC'
-inputName = "AO2D_medium_297182.root"
+inputName = 'AO2D_medium_304463_CombPID.root'
 
 isMC = True # True for MC, False for DATA
-doMergeDF = False
+doMergeDF = True
 doMergeTable = True
-doFinalMerge = False
+doFinalMerge = True
 
 DF_merged_list, Table_merged_list = [], []
 
+# merger DF for singe file
 if doMergeDF:
     print('Merging DF for singe file...')
     DF_merged_list = merge_DF_singeFile(inputdir, inputName)
 
+# merge tables for ML, if doMergedF is True
 if doMergeTable and doMergeDF:
     print('Merging tables for ML...')
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
-        Table_merged_list = list(executor.map(paralize_merge, DF_merged_list))
-elif doMergeTable and not doMergeDF and doFinalMerge:
-    print('Merging tables for ML...')
-    inputNameDF = inputName.replace(".root", "_DFmerged.root")
-    DF_merged_list = merge_DF_singeFile(inputdir, inputNameDF, False)
     with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
         Table_merged_list = list(executor.map(paralize_merge, DF_merged_list))
-        
-if not doMergeDF and not doFinalMerge and doMergeTable:
-    root_list = merge_DF_singeFile(inputdir, inputName, False)
-    inputNameAll = inputName.replace(".root", "_All.root")
-    if not os.path.exists(f'{inputdir}/{inputNameAll}'):
-        print('Merging all files...')
-        if os.path.exists(f'{inputdir}/input.txt'):
-            os.remove(f'{inputdir}/input.txt')
-        with open(f'{inputdir}/input.txt', 'a') as f:
-            for file in root_list:
-                f.write(file + '\n')
-        command = f"o2-aod-merger --input {inputdir}/input.txt --output {inputdir}/{inputNameAll} --max-size 10000000000"
-        os.system(command)
-    merge_tables_for_ml(f'{inputdir}/{inputNameAll}', isMC, False)
 
+# merge tables for ML, if doMergedF is False, get the DFMerged file first
+elif doMergeTable and not doMergeDF:
+    print('Merging tables for ML...')
+    inputNameDF = inputName.replace(".root", "_DFmerged.root")
+    # get the DFmerged file
+    DF_merged_list = merge_DF_singeFile(inputdir, inputNameDF, False)
+    # merge tables for ML
+    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
+        Table_merged_list = list(executor.map(paralize_merge, DF_merged_list))
+
+# final merging
 if doFinalMerge:
     print('Final merging...')
     if os.path.exists(f'{inputdir}/input.txt'):
@@ -184,3 +180,18 @@ if doFinalMerge:
         inputName = inputName.replace(".root", "_merged.root")
         command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
         os.system(command)
+
+# if not doMergeDF and not doFinalMerge and doMergeTable:
+#     root_list = merge_DF_singeFile(inputdir, inputName, False)
+#     inputNameAll = inputName.replace(".root", "_All.root")
+#     if not os.path.exists(f'{inputdir}/{inputNameAll}'):
+#         print('Merging all files...')
+#         if os.path.exists(f'{inputdir}/input.txt'):
+#             os.remove(f'{inputdir}/input.txt')
+#         with open(f'{inputdir}/input.txt', 'a') as f:
+#             for file in root_list:
+#                 f.write(file + '\n')
+#         command = f"o2-aod-merger --input {inputdir}/input.txt --output {inputdir}/{inputNameAll} --max-size 10000000000"
+#         os.system(command)
+#     merge_tables_for_ml(f'{inputdir}/{inputNameAll}', isMC, False)
+
