@@ -1,18 +1,18 @@
 import ROOT
 
 def PrepareSamples():
-    inputDataFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/303753/AO2D_merged.root", "read")
+    inputDataFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/3050/AO2D_merged.root", "read")
     # inputDataFile = ROOT.TFile("/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/AO2D_MC_294429_medium_merge_mergedForML.root", "read")
     # dataDF = inputDataFile.Get("DF_2336986332012768")
     dataTree = inputDataFile.Get("TreeForML")
 
     # inputMcFile = ROOT.TFile("/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/AO2D_MC_293770_small_merge_mergedForML.root", "read")
-    inputMcFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/AO2D_medium_304463_CombPID_merged.root", "read")
+    inputMcFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/311387/AO2D_MC_Medium_merged.root", "read")
     # mcDF = inputMcFile.Get("DF_2336986331102138")
     mcTree = inputMcFile.Get("TreeForML")
 
     outDir = "/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample"
-    suffix = "303753"
+    suffix = "noPIDCut"
 
     pTmin = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
     pTmax = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]  # list
@@ -23,7 +23,7 @@ def PrepareSamples():
     hh_edge = [2.04, 2.04, 2.04, 2.04, 2.07, 2.07, 2.07, 2.07, 2.1, 2.1, 2.1, 2.1]
 
     dfDataForMLApply = ROOT.RDataFrame(dataTree)
-    filter = "fY > -0.8 && fY < 0.8 && fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3"
+    filter = ("fY > -0.8 && fY < 0.8") #* && fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3")
     pt_mass_cut = " || ".join([f"({pTmin[i]} < fPt && fPt < {pTmax[i]} && (({ll_edge[i]} < fM && fM < {low_edge[i]}) || ({high_edge[i]} < fM && fM < {hh_edge[i]})))" for i in range(len(pTmin))])
     dfDataForMLApply.Filter(f"{filter} && ({pt_mass_cut})") \
         .Snapshot("TreeForML", f'{outDir}/DataTreeForMLTrain_{suffix}.root', 
@@ -55,7 +55,7 @@ def PrepareSamples():
     dfMcPromptForApply = ROOT.RDataFrame(mcTree)
     mc_prompt_filter = (
         "fY > -0.8 && fY < 0.8 && fOriginMcRec==1 && "
-        "fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3 && fCpa > 0.9 && ((fCpa > 0.9 && fPt < 5) || (fCpa > 0.92 && fPt > 5))"
+        "fCpa > 0.9 && ((fCpa > 0.9 && fPt < 5) || (fCpa > 0.92 && fPt > 5))" #* && fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3"
     )
     dfMcPromptForApply.Filter(mc_prompt_filter) \
         .Snapshot("TreeForML", f'{outDir}/McTreeForMLPromptTrain_{suffix}.root', 
@@ -85,7 +85,8 @@ def PrepareSamples():
                    "fM", "fPt", "fY", "fFlagMcMatchRec", "fOriginMcRec", "fCandidateSelFlag"])
 
     dfMcFDForApply = ROOT.RDataFrame(mcTree)
-    dfMcFDForApply.Filter("fY > -0.8 && fY < 0.8 && fOriginMcRec==2 && fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3 && ((fCpa > 0.9 && fPt < 5) || (fCpa > 0.92 && fPt > 5))") \
+    mc_fd_filter = ("fY > -0.8 && fY < 0.8 && fOriginMcRec==2 && ((fCpa > 0.9 && fPt < 5) || (fCpa > 0.92 && fPt > 5))") #* && fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3")
+    dfMcFDForApply.Filter(mc_fd_filter) \
         .Snapshot("TreeForML", f'{outDir}/McTreeForMLFDTrain_{suffix}.root', 
                   [
     "fChi2PCA",

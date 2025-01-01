@@ -61,13 +61,15 @@ if __name__ == "__main__":
 
     # 读取 Parquet 文件
     parquet_file = [
-        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_med/pt2_3/Prompt_pT_2_3_ModelApplied.parquet.gzip',
-        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_med/pt2_3/FD_pT_2_3_ModelApplied.parquet.gzip'
+        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/Prompt_pT_2_3_ModelApplied.parquet.gzip',
+        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/FD_pT_2_3_ModelApplied.parquet.gzip',
+        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/Data_pT_2_3_ModelApplied.parquet.gzip'
     ]
     # parquet_file = '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_med/pt2_3/Prompt_pT_2_3_ModelApplied.parquet.gzip'
     out_file = [
-        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_med/pt2_3/Prompt_pT_2_3_ModelApplied.root',
-        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_med/pt2_3/FD_pT_2_3_ModelApplied.root'
+        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/Prompt_pT_2_3_ModelApplied.root',
+        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/FD_pT_2_3_ModelApplied.root',
+        '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/Data_pT_2_3_ModelApplied.root'
     ]
 
     # for inFile, outFile in zip(parquet_file, out_file):
@@ -83,9 +85,9 @@ if __name__ == "__main__":
 
     #     print(f'Parquet 文件已成功转换为 ROOT 文件: {outFile}')
 
-    sig_cuts = list(np.arange(0.2, 0.75, 0.05))
+    sig_cuts = list(np.arange(0.2, 0.8, 0.02))
     print(sig_cuts)
-    bkg_cuts = [0.01 for _ in sig_cuts]
+    bkg_cuts = [0.001 for _ in sig_cuts]
     prompt_file = ROOT.TFile(out_file[0], "read")
     FD_file = ROOT.TFile(out_file[1], "read")
 

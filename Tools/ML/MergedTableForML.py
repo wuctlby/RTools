@@ -128,8 +128,8 @@ def merge_tables_for_ml(path_to_file, isMC, findDF=False):
 # inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/303753'
 # inputName = "AO2D.root"
 
-inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC'
-inputName = 'AO2D_medium_304463_CombPID.root'
+inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/311387'
+inputName = 'AO2D_MC_Medium.root'
 
 isMC = True # True for MC, False for DATA
 doMergeDF = True
