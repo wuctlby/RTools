@@ -121,11 +121,11 @@ def merge_tables_for_ml(path_to_file, isMC, findDF=False):
 # inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/303753'
 # inputName = "AO2D.root"
 
-inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/50100/322768'
-inputName = 'AO2D.root'
+inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC'
+inputName = 'AO2D_medium_50100_OccPIDCal_322973.root'
 
-isMC = False # True for MC, False for DATA
-doMergeDF = False
+isMC = True # True for MC, False for DATA
+doMergeDF = True
 doMergeTable = True
 doFinalMerge = True
 
@@ -154,7 +154,7 @@ elif doMergeTable and not doMergeDF:
     # get the DFmerged file
     DF_merged_list = merge_DF_singeFile(inputdir, inputNameDF, False)
     # merge tables for ML
-    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
         with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
             futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
             Table_merged_list = []

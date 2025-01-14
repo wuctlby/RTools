@@ -1,9 +1,9 @@
 input:
   prompt:
-    [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample/McTreeForMLPromptTrain_303753.root]
+    [/home/wuct/ALICE/local/RTools/RTools/ML/Trainning/sample/McTreeForMLPromptTrain_6080.root]
   FD:
-    [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample/McTreeForMLFDTrain_303753.root]
-  data: [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample/DataTreeForMLTrain_303753.root]
+    [/home/wuct/ALICE/local/RTools/RTools/ML/Trainning/sample/McTreeForMLFDTrain_6080.root]
+  data: [/home/wuct/ALICE/local/RTools/RTools/ML/Trainning/sample/DataTreeForMLTrain_6080.root]
   treename: TreeForML
 
 data_prep:
@@ -20,8 +20,8 @@ data_prep:
   test_fraction: 0.1
 
 pt_ranges:
-  min: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
-  max: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]  # list
+  min: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
+  max: [2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]  # list
 
 ml:
   raw_output: false
@@ -34,7 +34,13 @@ ml:
   #   "fImpactParameterProduct",
   #     "fNSigTpcTofPi0", "fNSigTpcTofPi1", "fNSigTpcTofKa0", "fNSigTpcTofKa1"]""
   # training_vars: [cpa, cpaXY, decayLength, decayLengthXY, impactParameterProduct]
-  training_vars: ["fCpa", "fCpaXY", "fDecayLengthXY", "fDecayLengthXYNormalised", "fImpactParameterProduct","fNSigTpcTofPiExpPi", "fNSigTpcTofKaExpKa"]
+  training_vars: ["fImpactParameterProduct", 
+  "fDecayLengthXY", 
+  "fCpa", 
+  "fDecayLengthNormalised", 
+  "fCosThetaStar", 
+  "fNSigTpcTofPiExpPi", 
+  "fNSigTpcTofKaExpKa"]
 
   hyper_pars: [
     {
@@ -167,18 +173,18 @@ ml:
         "colsample_bytree": !!python/tuple [0.7, 1.]
       }
   saved_models: [
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt0_1/ModelHandler_D0ToKPi_pT_0_1.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt1_2/ModelHandler_D0ToKPi_pT_1_2.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/ModelHandler_D0ToKPi_pT_2_3.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt3_4/ModelHandler_D0ToKPi_pT_3_4.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt4_5/ModelHandler_D0ToKPi_pT_4_5.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt5_6/ModelHandler_D0ToKPi_pT_5_6.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt6_7/ModelHandler_D0ToKPi_pT_6_7.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt7_8/ModelHandler_D0ToKPi_pT_7_8.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt8_10/ModelHandler_D0ToKPi_pT_8_10.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt10_12/ModelHandler_D0ToKPi_pT_10_12.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt12_16/ModelHandler_D0ToKPi_pT_12_16.pickle,
-            /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt16_24/ModelHandler_D0ToKPi_pT_16_24.pickle
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt0_1/ModelHandler_D0ToKPi_pT_0_1.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt1_2/ModelHandler_D0ToKPi_pT_1_2.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt2_3/ModelHandler_D0ToKPi_pT_2_3.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt3_4/ModelHandler_D0ToKPi_pT_3_4.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt4_5/ModelHandler_D0ToKPi_pT_4_5.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt5_6/ModelHandler_D0ToKPi_pT_5_6.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt6_7/ModelHandler_D0ToKPi_pT_6_7.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt7_8/ModelHandler_D0ToKPi_pT_7_8.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt8_10/ModelHandler_D0ToKPi_pT_8_10.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt10_12/ModelHandler_D0ToKPi_pT_10_12.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt12_16/ModelHandler_D0ToKPi_pT_12_16.pickle,
+            /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/pt16_24/ModelHandler_D0ToKPi_pT_16_24.pickle
           ]
 
 
@@ -187,7 +193,7 @@ output:
   # dir: applys
   #dir: Models_test/test
   # dir: ModelForTest
-  dir: /home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/
+  dir: /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Training_6080/
   leg_labels: # legend labels, keep the right number of classes
     Bkg: Background
     Prompt: Prompt

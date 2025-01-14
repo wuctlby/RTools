@@ -1,18 +1,18 @@
 import ROOT
 
 def PrepareSamples():
-    inputDataFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/3050/AO2D_merged.root", "read")
+    inputDataFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/50100/322768/AO2D_merged.root", "read")
     # inputDataFile = ROOT.TFile("/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/AO2D_MC_294429_medium_merge_mergedForML.root", "read")
     # dataDF = inputDataFile.Get("DF_2336986332012768")
     dataTree = inputDataFile.Get("TreeForML")
 
     # inputMcFile = ROOT.TFile("/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/AO2D_MC_293770_small_merge_mergedForML.root", "read")
-    inputMcFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/311387/AO2D_MC_Medium_merged.root", "read")
+    inputMcFile = ROOT.TFile("/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/AO2D_medium_50100_OccPIDCal_322973_merged.root", "read")
     # mcDF = inputMcFile.Get("DF_2336986331102138")
     mcTree = inputMcFile.Get("TreeForML")
 
-    outDir = "/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample"
-    suffix = "noPIDCut"
+    outDir = "/home/wuct/ALICE/local/RTools/RTools/ML/sample"
+    suffix = "6080"
 
     pTmin = [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
     pTmax = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]  # list

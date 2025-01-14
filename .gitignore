@@ -1,0 +1,27 @@
+# C/C++
+*.d
+*.pcm
+*.so
+
+# ROOT Files
+/*.root
+
+# python/ML
+__pycache__
+*.pyc
+*.pickle
+*.model
+*.pkl
+*.parquet.gzip
+
+# misc
+.vscode
+.DS_Store
+*.log
+
+# Graphics
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.eps
