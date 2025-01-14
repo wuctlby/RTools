@@ -2,6 +2,7 @@ import pandas as pd
 import ROOT
 import uproot
 import argparse
+import yaml
 import os
 import concurrent.futures
 from alive_progress import alive_bar
@@ -9,7 +10,7 @@ from alive_progress import alive_bar
 # merge DF for singe file. merge table for singe file. merge all file
 
 # paralize file at same time
-def paralize_merge(DF_merged):
+def paralize_merge(DF_merged, isMC):
     return merge_tables_for_ml(DF_merged, isMC)
 
 def Get_DFName(path_to_file):
@@ -150,7 +151,7 @@ def merge(config):
         print('Merging tables for ML...')
         with concurrent.futures.ThreadPoolExecutor(max_workers=Max_works) as executor:
             with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
-                futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
+                futures = {executor.submit(paralize_merge, df, isMC): df for df in DF_merged_list}
                 Table_merged_list = []
                 for future in concurrent.futures.as_completed(futures):
                     Table_merged_list.append(future.result())
@@ -165,7 +166,7 @@ def merge(config):
         # merge tables for ML
         with concurrent.futures.ThreadPoolExecutor(max_workers=Max_works) as executor:
             with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
-                futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
+                futures = {executor.submit(paralize_merge, df, isMC): df for df in DF_merged_list}
                 Table_merged_list = []
                 for future in concurrent.futures.as_completed(futures):
                     Table_merged_list.append(future.result())
