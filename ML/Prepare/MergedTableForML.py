@@ -1,6 +1,7 @@
 import pandas as pd
 import ROOT
 import uproot
+import argparse
 import os
 import concurrent.futures
 from alive_progress import alive_bar
@@ -114,87 +115,103 @@ def merge_tables_for_ml(path_to_file, isMC, findDF=False):
     
     return outputName
 
+def merge(config):
+    '''
+    Merge the tables for ML.
+    
+    Input:
+        -config:
+            configuration file
+    '''
+    
 
-# inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/297182'
-# inputName = "AO2D.root"
+    # load the configuration
+    with open(config, "r") as cf:
+        config = yaml.safe_load(cf)
+        
+    doMergeDF = config["doMergeDF"]
+    doMergeTable = config["doMergeTable"]
+    doFinalMerge = config["doFinalMerge"]
+    inputdir = config["inputdir"]
+    inputName = config["inputName"]
+    isMC = config["isMC"]
+    
+    Max_works = config["max_works"]
 
-# inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/303753'
-# inputName = "AO2D.root"
+    DF_merged_list, Table_merged_list = [], []
 
-inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC'
-inputName = 'AO2D_medium_50100_OccPIDCal_322973.root'
+    # merger DF for singe file
+    if doMergeDF:
+        print('Merging DF for singe file...')
+        DF_merged_list = merge_DF_singeFile(inputdir, inputName)
 
-isMC = True # True for MC, False for DATA
-doMergeDF = True
-doMergeTable = True
-doFinalMerge = True
+    # merge tables for ML, if doMergedF is True
+    if doMergeTable and doMergeDF:
+        print('Merging tables for ML...')
+        with concurrent.futures.ThreadPoolExecutor(max_workers=Max_works) as executor:
+            with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
+                futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
+                Table_merged_list = []
+                for future in concurrent.futures.as_completed(futures):
+                    Table_merged_list.append(future.result())
+                    bar()
 
-DF_merged_list, Table_merged_list = [], []
+    # merge tables for ML, if doMergedF is False, get the DFMerged file first
+    elif doMergeTable and not doMergeDF:
+        print('Merging tables for ML...')
+        inputNameDF = inputName.replace(".root", "_DFmerged.root")
+        # get the DFmerged file
+        DF_merged_list = merge_DF_singeFile(inputdir, inputNameDF, False)
+        # merge tables for ML
+        with concurrent.futures.ThreadPoolExecutor(max_workers=Max_works) as executor:
+            with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
+                futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
+                Table_merged_list = []
+                for future in concurrent.futures.as_completed(futures):
+                    Table_merged_list.append(future.result())
+                    bar()
 
-# merger DF for singe file
-if doMergeDF:
-    print('Merging DF for singe file...')
-    DF_merged_list = merge_DF_singeFile(inputdir, inputName)
+    # final merging
+    if doFinalMerge:
+        print('Final merging...')
+        if os.path.exists(f'{inputdir}/input.txt'):
+            os.remove(f'{inputdir}/input.txt')
+        if doMergeTable:
+            with open(f'{inputdir}/input.txt', 'a') as f:
+                for file in Table_merged_list:
+                    f.write(file + '\n')
+            inputName = inputName.replace(".root", "_merged.root")
+            command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
+            os.system(command)
+        else:
+            inputNameTable = inputName.replace(".root", "_DFmerged_tableMerged.root")
+            Table_merged_list = merge_DF_singeFile(inputdir, inputNameTable, False)
+            with open(f'{inputdir}/input.txt', 'a') as f:
+                for iFile, file in enumerate(Table_merged_list):
+                    f.write(file + '\n')
+            inputName = inputName.replace(".root", "_merged.root")
+            command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
+            os.system(command)
 
-# merge tables for ML, if doMergedF is True
-if doMergeTable and doMergeDF:
-    print('Merging tables for ML...')
-    with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
-        with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
-            futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
-            Table_merged_list = []
-            for future in concurrent.futures.as_completed(futures):
-                Table_merged_list.append(future.result())
-                bar()
+    # if not doMergeDF and not doFinalMerge and doMergeTable:
+    #     root_list = merge_DF_singeFile(inputdir, inputName, False)
+    #     inputNameAll = inputName.replace(".root", "_All.root")
+    #     if not os.path.exists(f'{inputdir}/{inputNameAll}'):
+    #         print('Merging all files...')
+    #         if os.path.exists(f'{inputdir}/input.txt'):
+    #             os.remove(f'{inputdir}/input.txt')
+    #         with open(f'{inputdir}/input.txt', 'a') as f:
+    #             for file in root_list:
+    #                 f.write(file + '\n')
+    #         command = f"o2-aod-merger --input {inputdir}/input.txt --output {inputdir}/{inputNameAll} --max-size 10000000000"
+    #         os.system(command)
+    #     merge_tables_for_ml(f'{inputdir}/{inputNameAll}', isMC, False)
 
-# merge tables for ML, if doMergedF is False, get the DFMerged file first
-elif doMergeTable and not doMergeDF:
-    print('Merging tables for ML...')
-    inputNameDF = inputName.replace(".root", "_DFmerged.root")
-    # get the DFmerged file
-    DF_merged_list = merge_DF_singeFile(inputdir, inputNameDF, False)
-    # merge tables for ML
-    with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
-        with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
-            futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
-            Table_merged_list = []
-            for future in concurrent.futures.as_completed(futures):
-                Table_merged_list.append(future.result())
-                bar()
-
-# final merging
-if doFinalMerge:
-    print('Final merging...')
-    if os.path.exists(f'{inputdir}/input.txt'):
-        os.remove(f'{inputdir}/input.txt')
-    if doMergeTable:
-        with open(f'{inputdir}/input.txt', 'a') as f:
-            for file in Table_merged_list:
-                f.write(file + '\n')
-        inputName = inputName.replace(".root", "_merged.root")
-        command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
-        os.system(command)
-    else:
-        inputNameTable = inputName.replace(".root", "_DFmerged_tableMerged.root")
-        Table_merged_list = merge_DF_singeFile(inputdir, inputNameTable, False)
-        with open(f'{inputdir}/input.txt', 'a') as f:
-            for iFile, file in enumerate(Table_merged_list):
-                f.write(file + '\n')
-        inputName = inputName.replace(".root", "_merged.root")
-        command = f"hadd -f {inputdir}/{inputName} " + " ".join(Table_merged_list)
-        os.system(command)
-
-# if not doMergeDF and not doFinalMerge and doMergeTable:
-#     root_list = merge_DF_singeFile(inputdir, inputName, False)
-#     inputNameAll = inputName.replace(".root", "_All.root")
-#     if not os.path.exists(f'{inputdir}/{inputNameAll}'):
-#         print('Merging all files...')
-#         if os.path.exists(f'{inputdir}/input.txt'):
-#             os.remove(f'{inputdir}/input.txt')
-#         with open(f'{inputdir}/input.txt', 'a') as f:
-#             for file in root_list:
-#                 f.write(file + '\n')
-#         command = f"o2-aod-merger --input {inputdir}/input.txt --output {inputdir}/{inputNameAll} --max-size 10000000000"
-#         os.system(command)
-#     merge_tables_for_ml(f'{inputdir}/{inputNameAll}', isMC, False)
-
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Arguments")
+    parser.add_argument("config", metavar="text",
+                        default="config_PreSample.yml", help="the prepare sample configuration file")
+    args = parser.parse_args()
+    merge(
+        config=args.config
+    )
