@@ -1,8 +1,9 @@
 import pandas as pd
 import ROOT
-import uproot3 as uproot
+import uproot
 import os
 import concurrent.futures
+from alive_progress import alive_bar
 
 # merge DF for singe file. merge table for singe file. merge all file
 
@@ -22,11 +23,14 @@ def Get_DFName(path_to_file):
         -DFName:
     '''
 
-    input_file = uproot.open(path_to_file)
-    DFName = input_file.keys()
+    # input_file = uproot.open(path_to_file)
+    # DFName = input_file.keys()
+    input_file = ROOT.TFile(path_to_file)
+    DFName = [key.GetName() for key in input_file.GetListOfKeys()]
     if len(DFName) > 2:
         print("Warning: More than one DF in the file")
         exit()
+    input_file.Close()
     
     return DFName[0]
 
@@ -84,37 +88,26 @@ def merge_tables_for_ml(path_to_file, isMC, findDF=False):
     table_merged = input_file.get(DFName)
 
     if isMC:
-        tree_pt_eta_phi_mass_y = table_merged.get("O2hfd0base")
-        tree_mcmatchrec_origin = table_merged.get("O2hfd0mc")
-        tree_pars = table_merged.get("O2hfd0par")
-        tree_cts = table_merged.get("O2hfd0pare")
-        tree_selflag = table_merged.get("O2hfd0sel")
-
-        df_pt_eta_phi_mass_y = tree_pt_eta_phi_mass_y.pandas.df()
-        df_mcmatchrec_origin = tree_mcmatchrec_origin.pandas.df()
-        df_pars = tree_pars.pandas.df()
-        df_cts = tree_cts.pandas.df()
-        df_selflag = tree_selflag.pandas.df()
+        df_pt_eta_phi_mass_y = table_merged["O2hfd0base"].arrays(library="pd")
+        df_mcmatchrec_origin = table_merged["O2hfd0mc"].arrays(library="pd")
+        df_pars = table_merged["O2hfd0par"].arrays(library="pd")
+        df_cts = table_merged["O2hfd0pare"].arrays(library="pd")
+        df_selflag = table_merged["O2hfd0sel"].arrays(library="pd")
 
         df_merged = pd.concat([df_pt_eta_phi_mass_y, df_mcmatchrec_origin, df_pars, df_cts, df_selflag], axis=1)  # MC
     else:
-        tree_pt_eta_phi_mass_y = table_merged.get("O2hfd0base")
-        tree_pars = table_merged.get("O2hfd0par")
-        tree_cts = table_merged.get("O2hfd0pare")
-        tree_selflag = table_merged.get("O2hfd0sel")
+        df_pt_eta_phi_mass_y = table_merged["O2hfd0base"].arrays(library="pd")
+        df_pars = table_merged["O2hfd0par"].arrays(library="pd")
+        df_cts = table_merged["O2hfd0pare"].arrays(library="pd")
+        df_selflag = table_merged["O2hfd0sel"].arrays(library="pd")
 
-        df_pt_eta_phi_mass_y = tree_pt_eta_phi_mass_y.pandas.df()
-        df_pars = tree_pars.pandas.df()
-        df_cts = tree_cts.pandas.df()
-        df_selflag = tree_selflag.pandas.df()
-
-        df_merged = pd.concat([df_pt_eta_phi_mass_y, df_pars, df_cts, df_selflag], axis=1) # DATA
+        df_merged = pd.concat([df_pt_eta_phi_mass_y, df_pars, df_cts, df_selflag], axis=1)  # DATA
 
     outputName = path_to_file.replace(".root", "_tableMerged.root")
     if not findDF:
         DFName = "TreeForML"
     with uproot.recreate(outputName) as root_file:
-        root_file[DFName] = uproot.newtree(df_merged.dtypes.to_dict())
+        root_file.mktree(DFName, df_merged.dtypes.to_dict())
         root_file[DFName].extend(df_merged.to_dict(orient='list'))
     root_file.close()
     input_file.close()
@@ -128,11 +121,11 @@ def merge_tables_for_ml(path_to_file, isMC, findDF=False):
 # inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/303753'
 # inputName = "AO2D.root"
 
-inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/311387'
-inputName = 'AO2D_MC_Medium.root'
+inputdir= '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/50100/322768'
+inputName = 'AO2D.root'
 
-isMC = True # True for MC, False for DATA
-doMergeDF = True
+isMC = False # True for MC, False for DATA
+doMergeDF = False
 doMergeTable = True
 doFinalMerge = True
 
@@ -147,7 +140,12 @@ if doMergeDF:
 if doMergeTable and doMergeDF:
     print('Merging tables for ML...')
     with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
-        Table_merged_list = list(executor.map(paralize_merge, DF_merged_list))
+        with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
+            futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
+            Table_merged_list = []
+            for future in concurrent.futures.as_completed(futures):
+                Table_merged_list.append(future.result())
+                bar()
 
 # merge tables for ML, if doMergedF is False, get the DFMerged file first
 elif doMergeTable and not doMergeDF:
@@ -157,7 +155,12 @@ elif doMergeTable and not doMergeDF:
     DF_merged_list = merge_DF_singeFile(inputdir, inputNameDF, False)
     # merge tables for ML
     with concurrent.futures.ThreadPoolExecutor(max_workers=24) as executor:
-        Table_merged_list = list(executor.map(paralize_merge, DF_merged_list))
+        with alive_bar(len(DF_merged_list), title='Merging Tables') as bar:
+            futures = {executor.submit(paralize_merge, df): df for df in DF_merged_list}
+            Table_merged_list = []
+            for future in concurrent.futures.as_completed(futures):
+                Table_merged_list.append(future.result())
+                bar()
 
 # final merging
 if doFinalMerge:
