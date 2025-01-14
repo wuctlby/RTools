@@ -38,13 +38,14 @@ def main(inputFile):
     infile = TFile(inputFile)
 
     # 打开输出文件
-    output_file_path = "/home/wuct/ALICE/local/DmesonAnalysis/RTools/Tools/output.txt"
+    output_file_path = "/home/wuct/ALICE/local/RTools/RTools/Tools/output.txt"
 
     if os.path.exists(output_file_path):
         with open(output_file_path, 'a') as output_file:
             output_file.write(f'"{inputFile}"\n')
             traverse_directory(infile, output_file=output_file)
     else:
+        
         with open(output_file_path, 'w') as output_file:
             output_file.write(f'"{inputFile}"\n')
         # 遍历ROOT文件中的所有一级文件夹
