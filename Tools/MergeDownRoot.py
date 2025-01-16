@@ -1,4 +1,6 @@
 import sys
+import os
+import concurrent.futures
 sys.path.append('..')
 
 from ML.Prepare.MergedTableForML import merge_DF_singeFile
@@ -52,17 +54,67 @@ def path_filter(file_paths):
     print(unique_paths)
     print(len(unique_paths))
     
+def is_valid_root_file(file_path):
+    command = f"rootls {file_path}"
+    return os.system(command) == 0
+
+def merge_files(file_list, output_file):
+    valid_files = [f for f in file_list if is_valid_root_file(f)]
+    if len(valid_files) < 2:
+        print(f"Warning: Not enough valid files to merge: {valid_files}")
+        return
+    command = f"hadd -f -j {output_file} " + " ".join(valid_files)
+    os.system(command)
+    
+def pre_merge(file_paths, merge_per_nfiles, max_workers):
+    stage = 0
+    while len(file_paths) > merge_per_nfiles - 1:
+        merged_files = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = []
+            for i in range(0, len(file_paths), merge_per_nfiles):
+                to_be_merged = file_paths[i:i + merge_per_nfiles]
+                if len(to_be_merged) > merge_per_nfiles - 1:
+                    output_file = f"{inputdir}/temp_merged_s{stage}_{i//merge_per_nfiles}.root"
+                    futures.append(executor.submit(merge_files, to_be_merged, output_file))
+                    merged_files.append(output_file)
+                else:
+                    merged_files.extend(to_be_merged)
+            concurrent.futures.wait(futures)
+        file_paths = merged_files
+        stage += 1
+    return file_paths
+
 if __name__ == '__main__':
     
-    inputdir = '/home/wuct/ALICE/Results/324130'
+    # please make sure the inputdir is the directory that doesn't contain the AnalysisResults.root
+    inputdir = '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/Results/324130'
     inputName = 'AnalysisResults.root'
     
-    pre_file_paths = merge_DF_singeFile(inputdir, inputName, False)
+    # be carefult to set a max_workers that is too large
     
-    file_paths = [path.replace(inputdir + '/', '') for path in pre_file_paths]
+    # it is also avaliable to set merge_per_nfiles to a larger number with a smaller max_workers
+    # this will be auto parallelize the execution by -j with defautly using the system maximum
     
-    file_paths.sort(key=len)
+    # it would be safer to set merge_per_nfiles to a smaller number, like 2 or 3,
+    # in case can't merge the files at high stage
+    merge_per_nfiles = 3
+    max_workers = 10
+    
+    file_paths = merge_DF_singeFile(inputdir, inputName, False)
+    
+    file_paths = pre_merge(file_paths, merge_per_nfiles, max_workers)
+
+    if len(file_paths) == 1:
+        final_output = f"{inputdir}/{inputName}"
+        os.rename(file_paths[0], final_output)
+    else:
+        merge_files(file_paths, f"{inputdir}/{inputName}")
+    
+    # file_paths = [path.replace(inputdir + '/', '') for path in pre_file_paths]
+    
+    # file_paths.sort(key=len)
         
-    path_filter(file_paths)
+    # path_filter(file_paths)
 
     pass
