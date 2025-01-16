@@ -1,13 +1,15 @@
 
 
 
-def get_hp_outpath(copypaths):
+def get_hp_outpath(copypaths, subpath = '/AOD'):
     '''
     Get the paths from the copy of train output.
 
     Input:
         -copypaths:
             list of paths
+        -subpath:  
+            subpath of the path
 
     Output:
         -list of paths
@@ -20,6 +22,6 @@ def get_hp_outpath(copypaths):
         for copypath in copypaths:
             split_paths = copypath.split(',')
             for i in range(len(split_paths)):
-                split_paths[i] = split_paths[i] + '/AOD'
+                split_paths[i] = split_paths[i] + subpath
             paths += split_paths
         return paths
