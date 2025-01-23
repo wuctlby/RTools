@@ -7,8 +7,8 @@ from utils.Load import load_histos
 
 def main(farPath):
     
-    ptmins = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12]  # list
-    ptmaxs =  [2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
+    ptmins = [1, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 10, 12, 16] #, 24, 36] #, 36] #14
+    ptmaxs = [2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 10, 12, 16, 24] #, 36, 50] #, 50]
     
     ptLims = list(ptmins)
     nPtBins = len(ptmins)
@@ -23,6 +23,10 @@ def main(farPath):
     
     inputFiles = []
     for ptmin, ptmax in zip(ptmins, ptmaxs):
+        if not isinstance(ptmin, int):
+            ptmin = str(ptmin).replace(".", "d")
+        if not isinstance(ptmax, int):
+            ptmax = str(ptmax).replace(".", "d")
         inputFiles.append(farPath + f"/cutvar_pt{ptmin}_{ptmax}/V2VsFrac/V2VsFrac_pt{ptmin}_{ptmax}.root")
         print(inputFiles[-1])
     
