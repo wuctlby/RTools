@@ -1,0 +1,169 @@
+outfile: /home/xxf/D0-analysis/LocalAnalysis_FD_D0_PbPb/McMatchCheck/hzh/hzh_p_pol2.root
+# column_list: ["fDecayLength", "fDecayLengthXY", "fCpa", "fCpaXY", 
+#             "fImpactParameterProduct", "fM", "fPt"]
+# column_list: ["fM", "fPt", fDecayLengthNormalised, fDecayLengthXYNormalised, 
+#         fImpactParameterNormalised0, fImpactParameterNormalised1, fMaxNormalisedDeltaIP]
+nbins: 50
+avg_bin: True
+column_list: [
+    "fM",
+    "fPt",
+    fDecayLength, 
+    fDecayLengthXY, 
+    fDecayLengthNormalised,
+    fDecayLengthXYNormalised,
+    fImpactParameter0,
+    fImpactParameter1,
+    fImpactParameterNormalised0,
+    fImpactParameterNormalised1,
+    # fNSigTpcTofPiExpPi,
+    # fNSigTpcTofKaExpPi,
+    # fNSigTpcTofPiExpKa,
+    # fNSigTpcTofKaExpKa,
+    fMaxNormalisedDeltaIP,
+    # fChi2PCA,
+    # fCt,
+    fCpa, 
+    fCpaXY, 
+    # fCosThetaStar,
+    # fImpactParameterProduct
+    ]
+fraction:
+    filename: /home/xxf/D0-analysis/LocalAnalysis_FD_D0_PbPb/McMatchCheck/fraction_fonll.root
+    prompt_histoname: hfPrompt
+    feeddown_histoname: hfFD
+infiles:
+    signal:
+        prompt:
+            filename: [
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt0_1/Prompt_D0ToKPi_pT_0_1_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt1_2/Prompt_D0ToKPi_pT_1_2_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt2_3/Prompt_D0ToKPi_pT_2_3_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt3_4/Prompt_D0ToKPi_pT_3_4_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt4_5/Prompt_D0ToKPi_pT_4_5_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt5_6/Prompt_D0ToKPi_pT_5_6_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt6_7/Prompt_D0ToKPi_pT_6_7_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt7_8/Prompt_D0ToKPi_pT_7_8_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt8_10/Prompt_D0ToKPi_pT_8_10_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt10_12/Prompt_D0ToKPi_pT_10_12_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt12_16/Prompt_D0ToKPi_pT_12_16_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt16_24/Prompt_D0ToKPi_pT_16_24_ModelApplied.parquet.gzip,
+            ]
+            dirname: null
+            treename: null
+        feeddown:
+            filename: [
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt0_1/FD_D0ToKPi_pT_0_1_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt1_2/FD_D0ToKPi_pT_1_2_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt2_3/FD_D0ToKPi_pT_2_3_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt3_4/FD_D0ToKPi_pT_3_4_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt4_5/FD_D0ToKPi_pT_4_5_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt5_6/FD_D0ToKPi_pT_5_6_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt6_7/FD_D0ToKPi_pT_6_7_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt7_8/FD_D0ToKPi_pT_7_8_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt8_10/FD_D0ToKPi_pT_8_10_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt10_12/FD_D0ToKPi_pT_10_12_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt12_16/FD_D0ToKPi_pT_12_16_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt16_24/FD_D0ToKPi_pT_16_24_ModelApplied.parquet.gzip,
+            ]
+            dirname: null
+            treename: null
+    secpeak: # only for Ds
+        prompt:
+            filename: null
+            dirname: null
+            treename: null
+        feeddown:
+            filename: null
+            dirname: null
+            treename: null
+        mean: 0 # fixed values of mean and sigma, used if histogram is not provided
+        sigma: 0
+    background:
+        filename: [
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt0_1/Data_D0ToKPi_pT_0_1_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt1_2/Data_D0ToKPi_pT_1_2_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt2_3/Data_D0ToKPi_pT_2_3_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt3_4/Data_D0ToKPi_pT_3_4_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt4_5/Data_D0ToKPi_pT_4_5_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt5_6/Data_D0ToKPi_pT_5_6_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt6_7/Data_D0ToKPi_pT_6_7_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt7_8/Data_D0ToKPi_pT_7_8_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt8_10/Data_D0ToKPi_pT_8_10_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt10_12/Data_D0ToKPi_pT_10_12_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt12_16/Data_D0ToKPi_pT_12_16_ModelApplied.parquet.gzip,
+                /home/xxf/D0-analysis/ML/O2-D2H-ML-Dev/trainning_result/train-wuct/apply_noSBcut/pt16_24/Data_D0ToKPi_pT_16_24_ModelApplied.parquet.gzip,
+            ]
+        dirname: null
+        treename: parquettree
+        nEvents: 11109318.0 # number of events for bkg in dataframe
+        # fractiontokeep: [0.0177, 0.0399, 0.0927, 0.2614, 0.0048, 0.0114, 0.0231, 0.0644, 0.2583, 0.8967, 1.] # [0.1, 0.5, 0.2, 0.3, 1, 1]
+        fractiontokeep: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        isMC: false # if false bkg from SB
+        fitFunc: pol2 # fit function for bkg from SB, e.g. pol1, pol2, expo
+        nSigma: 3 # number of sigma from signal region, used to select SB
+        nSigma_backup: [2, 1] # if nSigma fit failed, use nSigma_backup to fit
+        corrfactor:
+            filename: null # set null if no MC bkg correction is needed
+            histoname: null
+
+    preseleff: 
+        # filename: /home/xxf/D0-analysis/LocalAnalysis_FD_D0_PbPb/eff/output/eff_pre.root
+        filename: /home/xxf/D0-analysis/LocalAnalysis_FD_D0_PbPb/eff/eff_pre_59971.root
+        # filename: ../efficiencies_D0/Efficiency_D0_D0_pp13TeV_presel.root
+        prompthistoname: hEffPrompt
+        feeddownhistoname: hEffFD
+    # acceptance: ../accfiles/Acceptance_Toy_D0Kpi_yfidPtDep_etaDau09_ptDau100_feeddownDFONLL13ptshape_FONLLy.root
+    acceptance: 1  # /home/xxf/D0-analysis/LocalDmesonAnalysis/FD_D0_pp/accfiles/Acceptance_Toy_D0Kpi_yfidPtDep_etaDau09_ptDau100_FONLL5ptshape_FONLLy.root
+
+ppRefFile: null
+
+
+predictions:
+    crosssec:
+        filename: '/home/xxf/D0-analysis/LocalAnalysis_FD_D0_PbPb/fonll/fonll_pythia_beautyFFee_charmhadrons_5dot5tev_y0dot5.root'
+        dirnames:
+            prompt: Prompt/Dplus  # D0Kpi，a tagged error 
+            feeddown: NonPrompt/Dzero  
+        histonames: 
+            prompt: hFonllPromptDplusCentral              # D0Kpi central value prediction (with BR)
+            feeddown: hFonllNonPromptDzeroCentral         # D0Kpi from B central value prediction (with BR and B->D correction)
+    Raa: 
+        prompt: /home/xxf/D0-analysis/LocalDmesonAnalysis/FD_D0_pp/models/tamu/PromptD0_TAMU_RAA_5TeV_3050.txt  # 1. # can either be a fixed value or a text file
+        feeddown: /home/xxf/D0-analysis/LocalDmesonAnalysis/FD_D0_pp/models/tamu/NonPromptD0_TAMU_RAA_5TeV_3050.txt  # 1. # can either be a fixed value or a text file
+        model: tamu 
+
+Taa: 288.42  #4.228e+9   # 0.000000003917 #pb-1 #1.
+BR: 0.0395
+# minMass: 1.661
+# maxMass: 2.084
+minMass: 1.72
+maxMass: 2.03
+sigma_source: 1  # 0 for mc,1 for data 
+sigma_file: '/home/xxf/D0-analysis/LocalAnalysis_FD_D0_PbPb/rawyield/flarefly_old/prompt_enhanced/mass_D0_pt0.0-24.0_prompt_enhanced.root'
+rebin:
+    fDecayLength: [0,0.02,0.03,0.04,0.05,0.06,0.08,0.15,0.2,0.3]
+    fDecayLengthXY: [0,0.02,0.03,0.04,0.05,0.06,0.08,0.15,0.2,0.3]
+    fCpa: [0.96,0.98,0.984,0.988,0.992,0.996,1.0]
+    fCpaXY: [0.96,0.98,0.984,0.988,0.992,0.996,1.0]
+    fDecayLengthNormalised: [0,5,10,15,20,25,30,35,40,45,50,70,100]
+    fDecayLengthXYNormalised: [0,5,10,15,20,25,30,35,40,45,50,70,100]
+    fImpactParameter0: [-0.3,-0.2,-0.15,-0.1,-0.08,-0.06,-0.04,-0.02,-0.01,0,0.01,0.02,0.04,0.06,0.08,0.1,0.15,0.2,0.3]
+    fImpactParameter1: [-0.3,-0.2,-0.15,-0.1,-0.08,-0.06,-0.04,-0.02,-0.01,0,0.01,0.02,0.04,0.06,0.08,0.1,0.15,0.2,0.3]
+    fImpactParameterNormalised0: [-50,-40,-30,-20,-15,-10,-5,-2,0,2,5,10,15,20,30,40,50]
+    fImpactParameterNormalised1: [-50,-40,-30,-20,-15,-10,-5,-2,0,2,5,10,15,20,30,40,50]
+    fMaxNormalisedDeltaIP:  [-10,-7,-5,-4,-3,-2,-1,0,1,2,3,4,5,7,10]
+expected_signal_promptness: 'prompt' # Choice between: 'prompt' or 'nonprompt'
+ptmin: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16] 
+ptmax: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]
+# ptmin: [2] 
+# ptmax: [3]
+dfparametercuts:
+    name: null 
+    min: null
+    max: null
+    enable: False  # enable cuts over df column query over each df and relative scan histos 
+
+cutvars:
+    ML_output_Bkg: [ 0.003, 0.004, 0.002, 0.002, 0.002, 0.003, 0.003, 0.001, 0.003, 0.003, 0.007, 0.03]
+    ML_output_FD: [ 0.48, 0.76, 0.75, 0.7, 0.66, 0.64, 0.61, 0.48, 0.54, 0.61, 0.56, 0.81]
