@@ -63,7 +63,7 @@ def merge_files(file_list, output_file):
     if len(valid_files) < 2:
         print(f"Warning: Not enough valid files to merge: {valid_files}")
         return
-    command = f"hadd -f -j {output_file} " + " ".join(valid_files)
+    command = f"hadd -f {output_file} " + " ".join(valid_files)
     os.system(command)
     
 def pre_merge(file_paths, merge_per_nfiles, max_workers):
@@ -98,8 +98,8 @@ if __name__ == '__main__':
     
     # it would be safer to set merge_per_nfiles to a smaller number, like 2 or 3,
     # in case can't merge the files at high stage
-    merge_per_nfiles = 3
-    max_workers = 10
+    merge_per_nfiles = 2
+    max_workers = 12
     
     file_paths = merge_DF_singeFile(inputdir, inputName, False)
     
