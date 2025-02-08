@@ -9,3 +9,6 @@ This is used to print all objs(with path) in the .root file
     -- write a alias into the .bashrc 
         alias obj='python3 /home/wuct/ALICE/local/RTools/RTools/Tools/OutputFileObj.py'
     -- obj path/to/inputFile.root
+
+
+# **Dependency requeried**

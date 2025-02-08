@@ -1,6 +1,7 @@
 import os
 import re
 import ROOT
+from typing import List
 
 
 def load_file(inputPath, keyWord):
@@ -29,7 +30,7 @@ def load_file(inputPath, keyWord):
     return listtoReturn
 
 
-def load_histos(inputFiles, histoName):
+def load_histos(inputFiles, histoName, keyWord = False, onlyPath = False):
     '''
     Load the histogram in the inputFiles with the histoName.
 
@@ -44,17 +45,88 @@ def load_histos(inputFiles, histoName):
     '''
     #TODO: histo is list infile is list, histo is not list infile is list, histo is list infile is not list
     histoList = []
-    # loop over all inputFiles
-    for inputFile in inputFiles:
-        # open the file
-        file = ROOT.TFile(inputFile)
-        # get the histogram
-        histo = file.Get(histoName)
-        histo.SetDirectory(0)
-        # append the histogram to the list
-        histoList.append(histo)
+    if not isinstance(inputFiles, List):
+        inputFiles = [inputFiles]
+    if not keyWord:
+        # loop over all inputFiles
+        for inputFile in inputFiles:
+            # open the file
+            file = ROOT.TFile(inputFile)
+            # get the list of histograms
+            objNames = load_non_dir_objects(file)
+            for objName in objNames:
+                if objName == histoName:
+                    if onlyPath:
+                        histoList.append(objName)
+                    else:
+                        histo = file.Get(objName)
+                        if isinstance(histo, ROOT.TH1):
+                            histo.SetDirectory(0)
+                            histoList.append(histo)
+        if histoList == []:
+            print(f"No histogram with the name {histoName} in the input files.")
+    else:
+        # loop over all inputFiles
+        for inputFile in inputFiles:
+            # open the file
+            file = ROOT.TFile(inputFile)
+            # get the list of histograms
+            objNames = load_non_dir_objects(file)
+            for objName in objNames:
+                if histoName in objName:
+                    if onlyPath:
+                        histoList.append(objName)
+                    else:
+                        histo = file.Get(objName)
+                        if isinstance(histo, ROOT.TH1):
+                            histo.SetDirectory(0)
+                            histoList.append(histo)
+        if histoList == []:
+            print(f"No histogram with the name {histoName} in the input files.")
+
     return histoList
 
+def load_non_dir_objects(inputFile, path = ""):
+    '''
+    Return the list of non-directory objects with the path in the input file.
+
+    Input:
+        -inputFile:
+            input file
+
+    Output:
+        -object list
+    '''
+    objectList = []
+    try:
+        if isinstance(inputFile, str):
+            # open the file
+            file = ROOT.TFile(inputFile)
+            # get the list of keys
+            listofKeys = file.GetListOfKeys()
+        elif isinstance(inputFile, ROOT.TDirectory):
+            # get the list of keys
+            listofKeys = inputFile.GetListOfKeys()
+        elif isinstance(inputFile, ROOT.TFile):
+            # get the list of keys
+            listofKeys = inputFile.GetListOfKeys()
+        else:
+            raise TypeError("Input file type not supported.")
+    except Exception as e:
+        print(f"Error: {e}")
+        return objectList
+
+    # loop over all keys
+    for key in listofKeys:
+        obj = key.ReadObj()
+        # if the key is a directory
+        if obj.IsA().InheritsFrom(ROOT.TDirectory.Class()):
+            # traverse the directory
+            objectList.extend(load_non_dir_objects(obj, path = path + obj.GetName() + '/'))
+        else:
+            objectList.append(path + obj.GetName())
+
+    return objectList
 
 def load_runNumber(inputFiles):
     '''

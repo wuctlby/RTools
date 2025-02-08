@@ -1,0 +1,47 @@
+# inputFiles: [
+#   /home/wuct/ALICE/local/Results/BDT/k3050/full/uncorrelated_pass4/cutvar_pt3_3d5/V2VsFrac/V2VsFrac_pt3_3d5.root,
+#   /home/wuct/ALICE/local/Results/efficiency/cutvar_pt3_3d5/V2VsFrac/V2VsFrac_pt3_3d5.root,
+#   /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3_3d5_4p/V2VsFrac/V2VsFrac_pt3_3d5_4p.root,
+#   /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3_3d5_3p/V2VsFrac/V2VsFrac_pt3_3d5_3p.root
+# ]
+
+# legTitles: [
+#   'uncorrelated(6 points)',
+#   'uncorrelated(5 points)',
+#   'uncorrelated(4 points)',
+#   'uncorrelated(3 points)'
+# ]
+
+# outputDir: /home/wuct/ALICE/local/Results/BDT/k3050/full/combined/cutvar_pt3_3d5
+
+inputFiles: [
+  /home/wuct/ALICE/local/Results/BDT/k3050/full/uncorrelated_pass4/cutvar_pt3_3d5/V2VsFrac/V2VsFrac_pt3_3d5.root,
+  /home/wuct/ALICE/local/Results/BDT/k3050/full/combined/cutvar_pt3_3d5/V2VsFrac/V2VsFrac_pt3_3d5.root,
+  # /home/wuct/ALICE/local/Results/BDT/k3050/full/uncorrelated/cutvar_pt3_3d5/V2VsFrac/V2VsFrac_pt3_3d5.root
+  # /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3_3d5_4p/V2VsFrac/V2VsFrac_pt3_3d5_4p.root,
+  # /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3_3d5_3p/V2VsFrac/V2VsFrac_pt3_3d5_3p.root
+]
+
+legTitles: [
+  'uncorrelated(pass4)',
+  'combined(pass4)',
+  'uncorrelated(pass3)'
+  # 'uncorrelated(4 points)',
+  # 'uncorrelated(3 points)'
+]
+
+outputDir: /home/wuct/ALICE/local/Results/BDT/k3050/full/combined/cutvar_pt3_3d5
+
+# inputFiles: [
+#   /home/wuct/ALICE/local/Results/BDT/k3050/full/uncorrelated_pass4/cutvar_pt3d5_4/V2VsFrac/V2VsFrac_pt3d5_4.root,
+#   /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_4p/V2VsFrac/V2VsFrac_pt3d5_4_4p.root,
+#   /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_3p/V2VsFrac/V2VsFrac_pt3d5_4_3p.root
+# ]
+
+# legTitles: [
+#   'uncorrelated(5 points)',
+#   'uncorrelated(4 points)',
+#   'uncorrelated(3 points)'
+# ]
+
+# outputDir: /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_3p
