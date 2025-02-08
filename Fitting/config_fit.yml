@@ -1,13 +1,14 @@
 # ______________________________________________________________________________________________________________________________________________________
 #        1    2     3     4     5     6     7     8     9     10    11    12    13    14    15    16
-ptmins: [0.,  1,    1.5,  2,    2.5,  3,    3.5,  4,    5,    6,    7,    8,    10,   12,   16]
+ptmins: [0.5,  1,    1.5,  2,    2.5,  3,    3.5,  4,    5,    6,    7,    8,    10,   12,   16]
 ptmaxs: [1,   1.5,  2,    2.5,  3,    3.5,  4,    5,    6,    7,    8,    10,   12,   16,   24]
 
 inputFiles: [
-       /home/wuct/ALICE/local/Results/BDT/k3050/pre/sigma/sp/proj/projsigma.root
+      /home/wuct/ALICE/local/Results/BDT/k3050/pre/sigma/sp/proj/projsigma.root
 ]
-outputDir: '/home/wuct/ALICE/local/Results/BDT/k3050'
-centrality: 'k3050'
+outputDir: '/home/wuct/ALICE/local/Results/BDT/k3050/pre'
+cent: 'k3050'
+suffix: 'Sigma'
 
 #______________________________________________________________________________________________________________________________________________________
 # used for the fit
