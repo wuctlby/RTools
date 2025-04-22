@@ -6,7 +6,7 @@ from utils.cook_path import get_hp_outpath
 
 
 def download_files(nr, localpath, filePah):
-    os.system(f"alien.py cp -f -T {nr} {filePah} file:{localpath}")
+    os.system(f"alien.py cp -f -T {nr} {filePah} file:{localpath} | echo WUlby129941")
     
 def download_file_wrapper(args):
     nr, localpath, filePah = args
@@ -15,16 +15,16 @@ def download_file_wrapper(args):
 nr = 64
 # copy path from the submitted jobs of train
 copypaths = [
-""
+    '/alice/cern.ch/user/a/alihyperloop/jobs/0180/hy_1801720'
+    
 ]
-
 # the paths that failed to merge
 copypaths_faild = [
-    '/alice/cern.ch/user/a/alihyperloop/jobs/0105/hy_1055701,/alice/cern.ch/user/a/alihyperloop/jobs/0105/hy_1055697,/alice/cern.ch/user/a/alihyperloop/jobs/0105/hy_1055693'
+  '/alice/cern.ch/user/a/alihyperloop/jobs/0180/hy_1801944'
 ]
 
 Stage_faild = [
-    ''
+    'Stage_1',
 ]
 
 for faild_path in copypaths_faild:
@@ -36,8 +36,8 @@ paths_sucs = get_hp_outpath(copypaths, '')
 pre_paths_faild = get_hp_outpath(copypaths_faild, '')
 paths_faild = [path + '/' + stage for path in pre_paths_faild for stage in Stage_faild]
 
-train_num = 'xufei'
-localpath = '/media/wuct/wulby/ALICE/AnRes/xufei'
+train_num = '384760g'
+localpath = '/home/wuct/xxf-files'
 fileName = 'AnalysisResults' # AnalysisResults or AO2D
 max_workers = 32
 

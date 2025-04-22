@@ -13,7 +13,7 @@ import argparse
 def traverse_directory(directory, path="", output_file=None):
     for key in directory.GetListOfKeys():
         obj = key.ReadObj()
-        obj_name = obj.GetName()
+        obj_name = key.GetName()
         current_path = os.path.join(path, obj_name)
         
         if obj.IsA().InheritsFrom(ROOT.TDirectory.Class()):

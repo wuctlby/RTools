@@ -23,13 +23,15 @@ def compare(histoNames):
 
 def compare_multi(histoNames, inputFiles):
     cList = []
-    runNumber = load_runNumber(inputFiles)
+    inHistos = []
+    runNumber = ['high', 'low', 'med', 'int']
+    # runNumber = load_runNumber(inputFiles)
     for iFile, histoName in enumerate(histoNames):
         cList.append(ROOT.TCanvas(histoName, 'Resolution', 3200, 2600))
         cList[-1].Divide(2, 1)
         cList[-1].cd(1).SetPad(0.0, 0.0, 0.7, 1.0)
         cList[-1].cd(2).SetPad(0.65, 0.0, 1.0, 1.0)
-        
+        # runNumber.append(iFile)
         # Create legend
         leg = ROOT.TLegend(0.1, 0.1, 0.9, 0.9)
         leg.SetHeader("Run List")
@@ -46,12 +48,18 @@ def compare_multi(histoNames, inputFiles):
 
         # Draw histograms on the left pad
         cList[-1].cd(1)
-        inHistos = load_histos(inputFiles, histoName)
-        if len(inHistos) != len(runNumber):
-            print(inputFiles)
-            print(runNumber)
-            print("Error: Number of histograms and run numbers do not match")
-            return
+        # inHistos = load_histos(inputFiles, histoName)
+        for iF, inputFile in enumerate(inputFiles):
+            file = ROOT.TFile(inputFile)
+            print(inputFile)
+            inHistos.append(file.Get(histoName))
+            inHistos[-1].SetDirectory(0)
+        
+        # if len(inHistos) != len(runNumber):
+        #     print(inputFiles)
+        #     print(runNumber)
+        #     print("Error: Number of histograms and run numbers do not match")
+        #     return
 
         for i, histo in enumerate(inHistos):
 
@@ -80,7 +88,7 @@ def compare_multi(histoNames, inputFiles):
 
         cList[-1].Update()
 
-        # input("Press Enter to continue...")
+        input("Press Enter to continue...")
 
         outputName = histoName.split('/')[-1]
         if iFile % 2 == 0:
@@ -94,7 +102,7 @@ def compare_multi(histoNames, inputFiles):
 def doRato(inputFiles, histoNames):
     cList = []
     subInputFiles = inputFiles[1:]
-    runNumber = load_runNumber(subInputFiles)
+    runNumber = ['high', 'low', 'med']
     for iFile, histoName in enumerate(histoNames):
         # load histograms
         inHistos = load_histos(inputFiles, histoName)
@@ -122,11 +130,11 @@ def doRato(inputFiles, histoNames):
 
         # Draw histograms on the left pad
         cList[-1].cd(1)
-        if len(ratioHistos) != len(runNumber):
-            print(inputFiles)
-            print(runNumber)
-            print("Error: Number of histograms and run numbers do not match")
-            return
+        # if len(ratioHistos) != len(runNumber):
+        #     print(inputFiles)
+        #     print(runNumber)
+        #     print("Error: Number of histograms and run numbers do not match")
+        #     return
 
         for i, ratioHisto in enumerate(ratioHistos):
 
@@ -171,22 +179,25 @@ def doRato(inputFiles, histoNames):
         cList[-1].SaveAs(f'./{outputName}_ratio_k3050.pdf{pdfSuffix}')
 
 # configuration
-inFilePath = '/media/wuct/wulby/ALICE/AnRes/resolution/output_reso/k3050'
-keyWord = 'k3050'
+inFilePath = '/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/0100/k0100/large/sp/resolution'
+keyWord = 'resosp0100l'
 
 histoNames = [
     "FT0c_FV0a_TPCtot/histo_reso",
-    "FT0c_TPCpos_TPCneg/histo_reso",
     "FT0c_FV0a_TPCtot/histo_reso_delta_cent",
-    "FT0c_TPCpos_TPCneg/histo_reso_delta_cent"
     ]
 
 # load files
-inputFile_int = load_file("/media/wuct/wulby/ALICE/AnRes/resolution/output_reso", 'k3050_inte')
+# inputFile_int = load_file("/media/wuct/wulby/ALICE/AnRes/resolution/output_reso", 'k3050_inte')
+# inFilePath = [
+#     "/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/0100/k0100/large/sp/resolution/resosp0100l_hig_occu_Reso.root",
+#     "/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/0100/k0100/large/sp/resolution/resosp0100l_low_occu_Reso.root",
+#     "/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/0100/k0100/large/sp/resolution/resosp0100l_med_occu_Reso.root"
+# ]
 inputFiles = load_file(inFilePath, keyWord)
 
 compare_multi(histoNames, inputFiles)
-
+inputFile_int = '/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/3050/k3050/large/sp/resolution/resosp3050l_inte_Reso.root'
 # doratio
 inputFiles = inputFile_int + inputFiles
 

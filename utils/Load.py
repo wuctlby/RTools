@@ -4,7 +4,7 @@ import ROOT
 from typing import List
 
 
-def load_file(inputPath, keyWord):
+def load_file(inputPath, keyWord, recursive=True):
     '''
     Load the file in the inputPath with the keyWord.
 
@@ -13,21 +13,28 @@ def load_file(inputPath, keyWord):
             path to the file and the file name
         -keyWord:
             key word for the file
+        -whether to search recursively
 
     Output:
         -file list
     '''
-    # get list of keys in inputdir
-    listofFiles = os.listdir(inputPath)
-    listtoReturn = []
-    # loop over all keys
-    for key in listofFiles:
-        # if key is the inputName
-        if keyWord in key:
-            listtoReturn.append(inputPath + '/' + key)
+    matched_files = []
+    
+    if not os.path.isdir(inputPath):
+        raise ValueError(f"输入路径不存在或不是目录: {inputPath}")
 
-    listofFiles.sort()
-    return listtoReturn
+    for root, dirs, files in os.walk(inputPath):
+        for file in files:
+            if keyWord in file:
+                full_path = os.path.join(root, file)
+                matched_files.append(full_path)
+
+        if not recursive:
+            break
+
+    # 按文件名排序
+    matched_files.sort()
+    return matched_files
 
 
 def load_histos(inputFiles, histoName, keyWord = False, onlyPath = False):

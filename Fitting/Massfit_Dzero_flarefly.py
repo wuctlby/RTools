@@ -44,7 +44,7 @@ def Mass_fit_ff(inputFile, histoName, MassMin, MassMax, Rebin, SgnFunc, BkgFunc,
             FixedSigma = file.Get("hRawYieldsSigma").GetBinContent(iPt+1)
             fitter.set_signal_initpar(0, "sigma", FixedSigma, fix=True)
     else:
-        fitter.set_signal_initpar(0, "sigma", 0.016, limits=[0.005, 0.05])
+        fitter.set_signal_initpar(0, "sigma", 0.016, limits=[0.005, 0.07])
 
     # Initiate fit parameters
     fitter.set_particle_mass(0, pdg_id=421, limits=[1.850, 1.890])
@@ -73,6 +73,9 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
         ptBins.sort()
     nPtBins = len(ptBins) - 1
     inputFiles = config['inputFiles'] if 'inputFiles' in config and config['inputFiles'] else inputFiles
+    outputDir = config['outputDir'] if 'outputDir' in config and config['outputDir'] else outputDir
+    cent = config['cent'] if 'cent' in config and config['cent'] else cent
+    suffix = config['suffix'] if 'suffix' in config and config['suffix'] else suffix
     FixSigma = config['FixSigma'] if 'FixSigma' in config else False
     FixSigmaFromFile = config['FixSigmaFromFile'] if 'FixSigmaFromFile' in config else ''
     SgnFuncs = config['SgnFunc']

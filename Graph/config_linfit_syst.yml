@@ -34,24 +34,26 @@
 
 # outputDir: /home/wuct/ALICE/local/Results/BDT/comparision/app_2_11
 
-inputFiles: [
-  /home/wuct/ALICE/local/Results/BDT/2024/k3050/pass4_mc/pre_sys/cutvar_combined/V2VsFrac/V2VsFrac_combined.root,
-  /home/wuct/ALICE/local/Results/BDT/k3050/third/syst/pre_sys/cutvar_combined/V2VsFrac/V2VsFrac_combined.root,
-]
-
-legTitles: [
-  'Pass4',
-  'Pass3'
-]
-
-# outputDir: /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_3p
-
 # inputFiles: [
-#   /home/wuct/ALICE/local/Results/test/flow/systematics/sys/pt_30_35/syst_multitrial/V2VsFrac
+#   /home/wuct/ALICE/local/Results/BDT/k3050/full/uncorrelated_pass4/cutvar_pt3d5_4/V2VsFrac/V2VsFrac_pt3d5_4.root,
+#   /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_4p/V2VsFrac/V2VsFrac_pt3d5_4_4p.root,
+#   /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_3p/V2VsFrac/V2VsFrac_pt3d5_4_3p.root
 # ]
 
 # legTitles: [
-#   'trails'
+#   'uncorrelated(5 points)',
+#   'uncorrelated(4 points)',
+#   'uncorrelated(3 points)'
 # ]
 
-outputDir: /home/wuct/ALICE/local/Results/BDT/k3050/third/syst/pre_sys/
+# outputDir: /home/wuct/ALICE/local/Results/efficiency/k3050/cutvar_pt3d5_4_3p
+
+inputFiles: [
+  /home/wuct/ALICE/local/Results/test/flow/systematics/sys/pt_30_35/syst_multitrial/V2VsFrac
+]
+
+legTitles: [
+  'trails'
+]
+
+outputDir: /home/wuct/ALICE/local/Results/test/flow/systematics/sys/pt_30_35/syst_multitrial/pt_30_35
