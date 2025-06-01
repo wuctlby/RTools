@@ -72,19 +72,6 @@ if __name__ == "__main__":
         '/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/results/Training_303753/pt2_3/Data_pT_2_3_ModelApplied.root'
     ]
 
-    # for inFile, outFile in zip(parquet_file, out_file):
-    #     table = pq.read_table(inFile)
-
-    #     # 将 Parquet 表转换为字典
-    #     data = {name: table.column(name).to_numpy() for name in table.column_names}
-
-    #     # 创建 ROOT 文件并写入数据
-    #     with uproot.recreate(outFile) as f:
-    #         f["tree"] = uproot.newtree({name: np.float64 for name in data.keys()})
-    #         f["tree"].extend(data)
-
-    #     print(f'Parquet 文件已成功转换为 ROOT 文件: {outFile}')
-
     sig_cuts = list(np.arange(0.2, 0.8, 0.02))
     print(sig_cuts)
     bkg_cuts = [0.001 for _ in sig_cuts]
