@@ -1,0 +1,7 @@
+inputFiles: [
+  '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_ptsmear1p5_phi_pt0_5_415102.root',
+  '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_ptsmear1p5_phi_pt5_36_415104.root'
+]
+outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC'
+outputName: 'AO2D_MC_Pass3_ptsmearing1p5_phi'
+isMC: True # True for MC, False for DATA
