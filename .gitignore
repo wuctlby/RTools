@@ -26,3 +26,7 @@ __pycache__
 *.jpg
 *.jpeg
 *.eps
+
+# test files
+*.test
+test/
