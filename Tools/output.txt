@@ -1,6 +1,0 @@
-"/media/wuct/wulby/ALICE/AnRes/D0_flow/HEPData-ins2681666-v1-Table_1.root"
-"/media/wuct/wulby/ALICE/AnRes/D0_flow/HEPData-ins2681666-v1-Table_1.root"
-"Table 1/Hist1D_y1"
-"Table 1/Hist1D_y1_e1"
-"Table 1/Hist1D_y1_e2"
-"Table 1/Graph1D_y1"
