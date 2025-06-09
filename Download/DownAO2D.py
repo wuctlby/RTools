@@ -74,7 +74,7 @@ def main(config, check=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download files from Alien")
     parser.add_argument("--config", metavar="text",
-                    default="./DownAO2D.yaml", help="configuration file")
+                    default="./config/DownAO2D.yaml", help="configuration file")
     parser.add_argument("--check", '-c', action='store_true',
                         help="check the Download files")
     args = parser.parse_args()
