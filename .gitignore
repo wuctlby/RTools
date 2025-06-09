@@ -30,3 +30,4 @@ __pycache__
 # test files
 *.test
 /test
+Tools/output.txt
