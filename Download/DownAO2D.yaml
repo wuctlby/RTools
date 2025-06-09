@@ -1,9 +1,9 @@
 # Basic configuration
-nr: 64
+nr: 1
 train_num: "414423"
 localpath: "/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/Pass1"
 fileName: "AnalysisResults"
-max_workers: 5
+max_workers: 64
 
 # Path copied from the Hyperloop `Submitted Jobs` page
 copypaths: [
