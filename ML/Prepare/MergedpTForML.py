@@ -49,7 +49,7 @@ def merge_tables(*args):
         df_pt_eta_phi_mass_y = table_merged["O2hfd0base"].arrays(library="pd")
         df_mcmatchrec_origin = table_merged["O2hfd0mc"].arrays(library="pd")
         df_pars = table_merged["O2hfd0par"].arrays(library="pd")
-        # df_cts = table_merged["O2hfd0pbase"].arrays(library="pd")
+        df_cts = table_merged["O2hfd0pare"].arrays(library="pd")
         df_selflag = table_merged["O2hfd0sel"].arrays(library="pd")
 
         # df_merged = pd.concat([df_pt_eta_phi_mass_y, df_mcmatchrec_origin, df_pars, df_cts, df_selflag], axis=1)
@@ -104,10 +104,16 @@ def main(config):
         for file in tableMerged_files:
             f.write(file + '\n')
     outputName = outputName.replace(".root", "_merged.root")
-    command = f"hadd -f {outputPath}/{outputName} " + " ".join(tableMerged_files)
+    command = f"hadd -f {os.path.join(outputPath, outputName)} " + " ".join(tableMerged_files)
     os.system(command)
 
-    print(f"Final merged file: {outputPath}/{outputName}")
+    print(f"Final merged file: {os.path.join(outputPath, outputName)}")
+    if os.path.exists(os.path.join(outputPath, outputName)):
+        for file in tableMerged_files + dfMerged_files:
+            if os.path.exists(os.path.join(outputPath, file)):
+                os.remove(os.path.join(outputPath, file))
+            if os.path.exists(os.path.join(outputPath, 'input.txt')):
+                os.remove(os.path.join(outputPath, 'input.txt'))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments")
