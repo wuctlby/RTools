@@ -14,15 +14,27 @@ def cook_labels(labels, prompt=True):
         return [f"{label}_Prompt" for label in labels]
     else:
         return [f"{label}_FD" for label in labels]
-    
+
+def check_origin(label):
+    if 'Prompt' in label:
+        return 'Prompt'
+    elif 'FD' in label:
+        return 'FD'
+    else:
+        raise ValueError("Label must contain either 'Prompt' or 'FD'.")
+
+def reflection_filter(df, pureSig=True):
+    if pureSig:
+        return df[(df['fCandidateSelFlag'] == 1) & (df['fFlagMcMatchRec'] == 1) | (df['fCandidateSelFlag'] == 2) & (df['fFlagMcMatchRec'] == 2)]
+    else:
+        return df[(df['fCandidateSelFlag'] == 1) & (df['fFlagMcMatchRec'] == 2) | (df['fCandidateSelFlag'] == 2) & (df['fFlagMcMatchRec'] == 1)]
+
 def plot_ditribution(dfs, vars, numerator=[0], denominator=[1], output_path=None, pt_bin=None, filters={'Prompt':{}, 'FD':{}}, legend_labels=None, entry=True):
     if len(numerator) != len(denominator):
         raise ValueError("Numerator and denominator lists must have the same length.")
     if len(numerator) == 0 or len(denominator) == 0:
         raise ValueError("Numerator and denominator lists cannot be empty.")
-    
-    root_histograms = []
-    
+
     n_vars = len(vars)
     ncols = 4
     nrows = (n_vars + ncols - 1) // ncols
@@ -34,14 +46,14 @@ def plot_ditribution(dfs, vars, numerator=[0], denominator=[1], output_path=None
         histograms = []
         bin_centers = []
         for i, df in enumerate(dfs):
+            
+            # reflection filter
+            if filters['reflection_filter']:
+                df = reflection_filter(df, pureSig=True)
+
             normalizer = len(df['fPt'])
 
-            if 'Prompt' in legend_labels[i]:
-                ori = "Prompt"
-            elif 'FD' in legend_labels[i]:
-                ori = "FD"
-            else:
-                print('Error: No prompt or FD in legend labels')
+            ori = check_origin(legend_labels[i])
 
             if var in filters[ori]:
                 df = df[(df[var] > filters[ori][var][0]) & (df[var] < filters[ori][var][1])]
@@ -55,24 +67,9 @@ def plot_ditribution(dfs, vars, numerator=[0], denominator=[1], output_path=None
                 df = df[(df[var] > 0) & (df[var] < pt_bin[1])]
                 hist, bins = np.histogram(df[var], bins=10, range=[0, pt_bin[1]], 
                                           density=False, weights=[1.0 / normalizer / (pt_bin[1] / 10)] * len(df[var]))
-            elif var == 'fM':
-                hist, bins = np.histogram(df[var], bins=120, range=[1.55, 2.25],
-                                          density=False)
-
-            # fit for fM
-            # if var == 'fM':
-            #     # Convert numpy histogram to ROOT histogram
-            #     root_hist = ROOT.TH1D("h1", "h1", len(bins)-1, bins)
-            #     binwidth = bins[1] - bins[0]
-            #     for j in range(len(hist)):
-            #         root_hist.SetBinContent(j+1, hist[j] / binwidth)
-                
-            #     # Perform the fit
-            #     gaus = ROOT.TF1("gaus", "gaus", 1.45, 2.25)
-            #     root_hist.Fit(gaus, "Q")  # "Q" for quiet mode
-            #     root_hist.SetTitle(f"Fit for {var} - {legend_labels[i] if legend_labels else f'Dataset {i}'}")
-            #     root_hist.SetName(f"hist_{var}_{legend_labels[i]}")
-            #     root_histograms.append(root_hist)
+            # elif var == 'fM':
+            #     hist, bins = np.histogram(df[var], bins=120, range=[1.55, 2.25],
+            #                               density=False)
 
             bin_centers.append(0.5 * (bins[:-1] + bins[1:]))
             histograms.append(hist)
@@ -94,10 +91,11 @@ def plot_ditribution(dfs, vars, numerator=[0], denominator=[1], output_path=None
     
     # plot the candidates number for each case
     if entry:
-        entries = [len(df['fPt']) for df in dfs]
-        for iAxis, ax in enumerate(axes_dis):
-            label = f'{entries[iAxis]}'
-            ax.bar(iAxis, entries[iAxis], label=label)
+        if filters['reflection_filter']:
+            entries = [len(reflection_filter(df, pureSig=True)) for df in dfs]
+        for iDf, df in enumerate(dfs):
+            label = f'{entries[iDf]}'
+            axes_dis[len(vars)].bar(iDf, entries[iDf], label=label)
         axes_dis[len(vars)].set_title("Entries")
         axes_dis[len(vars)].legend()
 
@@ -114,15 +112,80 @@ def plot_ditribution(dfs, vars, numerator=[0], denominator=[1], output_path=None
     
     fig_dis.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.20)
     fig_ratio.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.20)
+
     if output_path:
         fig_dis.savefig(output_path)
         fig_ratio.savefig(output_path.replace('.png', '_ratio.png'))
     plt.close('all')
-    
-    root_file = ROOT.TFile(output_path.replace('.png', '.root').replace('Distribution_', 'Histograms_'), 'RECREATE')
+
+def store_inv_mass(dfs, output_path=None, legend_labels=None, filters={}):
+    root_histograms = []
+    for i, df in enumerate(dfs):
+        ori = check_origin(legend_labels[i])
+
+        hist_origin, bins_origin = np.histogram(df['fM'], bins=filters[ori]['fM'][2], 
+                                                range=[filters[ori]['fM'][0], filters[ori]['fM'][1]],
+                                                density=False)
+        root_hist_origin = ROOT.TH1D("hInvMassOrigin", "Invariant Mass Origin", len(bins_origin)-1, bins_origin)
+        for j in range(len(hist_origin)):
+            root_hist_origin.SetBinContent(j+1, hist_origin[j])
+        root_hist_origin.SetTitle(f"Invariant Mass Origin - {legend_labels[i] if legend_labels else f'Dataset {i}'}")
+        root_hist_origin.SetName(f"hist_inv_mass_origin_{legend_labels[i]}" if legend_labels else f"hist_inv_mass_origin_{i}")
+        root_histograms.append(root_hist_origin)
+
+        # store the invariant mass of reflection
+        if filters['reflection_filter']:
+            df_ref = reflection_filter(df, pureSig=False)
+            df = reflection_filter(df, pureSig=True)
+        
+        hist, bins = np.histogram(df['fM'], bins=filters[ori]['fM'][2], 
+                                  range=[filters[ori]['fM'][0], filters[ori]['fM'][1]],
+                                  density=False)
+        if filters['reflection_filter']:
+            hist_ref, bins_ref = np.histogram(df_ref['fM'], bins=100,
+                                            range=[filters[ori]['fM'][0], filters[ori]['fM'][1]],
+                                            density=False)
+        hist_bkg, bins_bkg = np.histogram(np.array(range(len(df['fM']))), bins=filters[ori]['fM'][2], 
+                                          range=[filters[ori]['fM'][0], filters[ori]['fM'][1]],
+                                          density=False)
+
+        binwidth = bins[1] - bins[0]
+        
+        # Convert numpy histogram to ROOT histogram
+        root_hist = ROOT.TH1D("hInvMass", "Invariant Mass", len(bins)-1, bins)
+        root_hist_bkg = ROOT.TH1D("hInvMassBkg", "Invariant Mass Background", len(bins_bkg)-1, bins_bkg)
+        bkg = np.zeros_like(hist_bkg)
+        for j in range(len(hist)):
+            root_hist.SetBinContent(j+1, hist[j])
+            root_hist_bkg.SetBinContent(j+1, bkg[j])
+        root_hist.SetTitle(f"Invariant Mass - {legend_labels[i] if legend_labels else f'Dataset {i}'}")
+        root_hist.SetName(f"hist_inv_mass_{legend_labels[i]}" if legend_labels else f"hist_inv_mass_{i}")
+        root_hist_bkg.SetTitle(f"Invariant Mass Background - {legend_labels[i] if legend_labels else f'Dataset {i}'}")
+        root_hist_bkg.SetName(f"hist_inv_mass_bkg_{legend_labels[i]}" if legend_labels else f"hist_inv_mass_bkg_{i}")
+        root_histograms.append(root_hist_bkg)
+        
+        gaus = ROOT.TF1("gaus", "gaus", 1.45, 2.25)
+        root_hist.Fit(gaus, "Q")  # "Q" for quiet mode
+        root_histograms.append(root_hist)
+
+        if filters['reflection_filter']:
+            root_hist_ref = ROOT.TH1D("hInvMass_ref", "Invariant Mass Reflection", len(bins_ref)-1, bins_ref)
+            for j in range(len(hist_ref)):
+                root_hist_ref.SetBinContent(j+1, hist_ref[j])
+            root_hist_ref.SetTitle(f"Invariant Mass Reflection - {legend_labels[i] if legend_labels else f'Dataset {i}'}")
+            root_hist_ref.SetName(f"hist_inv_mass_ref_{legend_labels[i]}" if legend_labels else f"hist_inv_mass_ref_{i}")
+            
+            double_gaus = ROOT.TF1("double_gaus", "gaus(0) + gaus(3)", 1.65, 2.15)
+            double_gaus.SetParameters(gaus.GetParameter(0), gaus.GetParameter(1), gaus.GetParameter(2),
+                                    gaus.GetParameter(0), gaus.GetParameter(1) + 0.1, gaus.GetParameter(2))
+            root_hist_ref.Fit(double_gaus, "Q")  # "Q" for quiet mode
+            root_histograms.append(root_hist_ref)
+
+    # Write the ROOT histogram to a file
+    out_file = ROOT.TFile(output_path, "RECREATE")
     for hist in root_histograms:
         hist.Write()
-    root_file.Close()
+    out_file.Close()
 
 def main(config):
     
@@ -159,62 +222,90 @@ def main(config):
         prompt_handler.slice_data_frame('fPt', pt_bins, True)
         fd_handler.slice_data_frame('fPt', pt_bins, True)
     
+    outDir = os.path.join(outputDir, f'input{suffix}')
+    
     for iPtBin, pt_bin in enumerate(pt_bins):
         print(f"Processing pt bin {iPtBin} with range {pt_bin}")
-        outDir = f'{outputDir}/input{suffix}'
-        os.makedirs(outDir, exist_ok=True)
-        
-        # all distributions and ratios
-        list_df = [
-            prompt_handlers[i].get_slice(iPtBin) for i in range(len(prompt_handlers))
-        ] + [
-            fd_handlers[i].get_slice(iPtBin) for i in range(len(fd_handlers))
-        ]
 
-        plot_ditribution(
-            list_df, variables_to_plot, [0, 2], [1, 3],
-            output_path=f'{outDir}/Distribution_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png',
-            pt_bin=pt_bin,
+        if cfg['func']['inputDistr']:
+            os.makedirs(os.path.join(outDir, 'Distr'), exist_ok=True)
+            os.makedirs(os.path.join(outDir, 'Distr_normalized'), exist_ok=True)        
             
-            legend_labels=leg_labels,
-            entry=True
-        )
+            # all distributions and ratios
+            list_df = [
+                prompt_handlers[i].get_slice(iPtBin) for i in range(len(prompt_handlers))
+            ] + [
+                fd_handlers[i].get_slice(iPtBin) for i in range(len(fd_handlers))
+            ]
 
-        plt.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.55)
-        plt.savefig(f'{outputDir}/Distr/All_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png')
-        plt.close('all')
+            plot_ditribution(
+                list_df, variables_to_plot, [0, 2], [1, 3],
+                output_path=f'{outDir}/Distr/All_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png',
+                pt_bin=pt_bin,
+                filters=filters,
+                legend_labels=leg_labels,
+                entry=True
+            )
 
-        # plot the ratio of prompt and FD separately
-        list_df_prompt = [
-            prompt_handlers[i].get_slice(iPtBin) for i in range(len(prompt_handlers))
-        ]
-        list_df_fd = [
-            fd_handlers[i].get_slice(iPtBin) for i in range(len(fd_handlers))
-        ]
+            plot_utils.plot_distr(list_df, variables_to_plot, 100, leg_labels, figsize=(12, 7),
+                            alpha=0.3, log=False, grid=False, density=True)
+            plt.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.55)
+            plt.savefig(f'{outDir}/Distr_normalized/All_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png')
+            plt.close('all')
 
-        plot_ditribution(
-            list_df_prompt, variables_to_plot, [0], [1],
-            output_path=f'{outDir}/Distr/Prompt_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png',
-            pt_bin=pt_bin,
-            legend_labels=cook_labels(cfg['plots']['leg_labels']['Prompt'], entry=True)
-        )
-        plot_ditribution(
-            list_df_fd, variables_to_plot, [0], [1],
-            output_path=f'{outDir}/Distr/FD_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png',
-            pt_bin=pt_bin,
-            legend_labels=cook_labels(cfg['plots']['leg_labels']['FD'], entry=False)
-        )
-        
-        plot_utils.plot_distr(list_df_prompt, variables_to_plot, 100, cfg['plots']['leg_labels']['Prompt'],
-                              figsize=(12, 7), alpha=0.25, log=False, grid=False, density=True)
-        plt.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.55)
-        plt.savefig(f'{outputDir}/Distr_normalized/Prompt_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png')
-        plt.close('all')
-        plot_utils.plot_distr(list_df_fd, variables_to_plot, 100, cfg['plots']['leg_labels']['FD'],
-                              figsize=(12, 7), alpha=0.25, log=False, grid=False, density=True)
-        plt.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.55)
-        plt.savefig(f'{outputDir}/Distr_normalized/FD_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png')
-        plt.close('all')
+            # plot the ratio of prompt and FD separately
+            list_df_prompt = [
+                prompt_handlers[i].get_slice(iPtBin) for i in range(len(prompt_handlers))
+            ]
+            list_df_fd = [
+                fd_handlers[i].get_slice(iPtBin) for i in range(len(fd_handlers))
+            ]
+
+            plot_ditribution(
+                list_df_prompt, variables_to_plot, [0], [1],
+                output_path=f'{outDir}/Distr/Prompt_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png',
+                pt_bin=pt_bin,
+                filters=filters,
+                legend_labels=cook_labels(cfg['plots']['leg_labels']['Prompt'], prompt=True),
+                entry=True
+            )
+            plot_ditribution(
+                list_df_fd, variables_to_plot, [0], [1],
+                output_path=f'{outDir}/Distr/FD_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png',
+                pt_bin=pt_bin,
+                filters=filters,
+                legend_labels=cook_labels(cfg['plots']['leg_labels']['FD'], prompt=False),
+                entry=True
+            )
+            
+            plot_utils.plot_distr(list_df_prompt, variables_to_plot, 100, cfg['plots']['leg_labels']['Prompt'],
+                                figsize=(12, 7), alpha=0.25, log=False, grid=False, density=True)
+            plt.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.55)
+            plt.savefig(f'{outDir}/Distr_normalized/Prompt_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png')
+            plt.close('all')
+            plot_utils.plot_distr(list_df_fd, variables_to_plot, 100, cfg['plots']['leg_labels']['FD'],
+                                figsize=(12, 7), alpha=0.25, log=False, grid=False, density=True)
+            plt.subplots_adjust(left=0.06, bottom=0.06, right=0.99, top=0.96, hspace=0.55, wspace=0.55)
+            plt.savefig(f'{outDir}/Distr_normalized/FD_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.png')
+            plt.close('all')
+
+        if cfg['func']['storeInvMass']:
+            os.makedirs(os.path.join(outDir, 'InvMass'), exist_ok=True)
+
+            # inherit the list_df from the previous step
+            if not cfg['func']['inputDistr']:
+                list_df = [
+                    prompt_handlers[i].get_slice(iPtBin) for i in range(len(prompt_handlers))
+                ] + [
+                    fd_handlers[i].get_slice(iPtBin) for i in range(len(fd_handlers))
+                ]
+            
+            store_inv_mass(
+                list_df, 
+                output_path=f'{outDir}/InvMass/InvMass_pT_{pt_bin[0]}_{pt_bin[1]}{suffix}.root',
+                legend_labels=leg_labels, 
+                filters=filters
+            )
 
     pass
 
