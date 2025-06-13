@@ -28,6 +28,7 @@ def main(config, check=False):
     
     # paths and stages
     copypaths = config.get('copypaths', [])
+    subfiles = config.get('subfiles', 0)
     copypaths_faild = config.get('copypaths_faild', [])
     Stage_faild = config.get('Stage_faild', ['Stage_1'])
 
@@ -37,6 +38,13 @@ def main(config, check=False):
             copypaths.remove(faild_path)
 
     paths_sucs = get_hp_outpath(copypaths, '')
+    if subfiles != 0:
+        paths_sucs_sub = []
+        for ipath, path in enumerate(paths_sucs):
+            for isub in range(1, subfiles):
+                isub = isub.__format__('04d')
+                paths_sucs_sub.append(f"{path}/{isub}")
+        paths_sucs = paths_sucs_sub
     pre_paths_faild = get_hp_outpath(copypaths_faild, '')
     
     if len(Stage_faild) == 1 and len(Stage_faild) < len(pre_paths_faild):
