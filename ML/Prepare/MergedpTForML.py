@@ -52,8 +52,8 @@ def merge_tables(*args):
         df_cts = table_merged["O2hfd0pare"].arrays(library="pd")
         df_selflag = table_merged["O2hfd0sel"].arrays(library="pd")
 
-        # df_merged = pd.concat([df_pt_eta_phi_mass_y, df_mcmatchrec_origin, df_pars, df_cts, df_selflag], axis=1)
-        df_merged = pd.concat([df_pt_eta_phi_mass_y, df_mcmatchrec_origin, df_pars, df_selflag], axis=1)
+        df_merged = pd.concat([df_pt_eta_phi_mass_y, df_mcmatchrec_origin, df_pars, df_cts, df_selflag], axis=1)
+        # df_merged = pd.concat([df_pt_eta_phi_mass_y, df_mcmatchrec_origin, df_pars, df_selflag], axis=1)
     else:
         df_pt_eta_phi_mass_y = table_merged["O2hfd0base"].arrays(library="pd")
         df_pars = table_merged["O2hfd0par"].arrays(library="pd")

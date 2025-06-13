@@ -2,16 +2,16 @@
 inputDataFile: ''
 dataTree: 'TreeForML'
 
-# inputMcFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_merged.root'
+# inputMcFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_merged.root'
 # mcTree: 'TreeForML'
 
-# outDir: '/home/wuct/ALICE/local/RTools/RTools/test/ML'
-# suffix: 'medium_ptsmearing1p5_phi'
-inputMcFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_medium_ptsmearing_merged.root'
+# outDir: '/home/wuct/ALICE/local/Results/checks/ML/inputDistr'
+# suffix: 'm_ptsmearing1p5_phi'
+inputMcFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing_merged.root'
 mcTree: 'TreeForML'
 
-outDir: '/home/wuct/ALICE/local/RTools/RTools/test/ML'
-suffix: 'medium_ptsmearing'
+outDir: '/home/wuct/ALICE/local/Results/checks/ML/inputDistr'
+suffix: 'm_ptsmearing'
 pTmins: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]
 pTmaxs: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]
 

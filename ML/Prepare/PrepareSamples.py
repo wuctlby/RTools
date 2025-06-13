@@ -1,3 +1,4 @@
+import os
 import yaml
 import ROOT
 import argparse
@@ -29,6 +30,8 @@ def PrepareSamples(config):
     data_filters = config.get("data_filters", [])
     mc_prompt_filters = config.get("mc_prompt_filters", [])
     mc_fd_filters = config.get("mc_fd_filters", [])
+    
+    os.makedirs(outDir, exist_ok=True)
     
     # join the inv mass filters
     pt_mass_cut = " || " \
@@ -114,7 +117,7 @@ def PrepareSamples(config):
                     "fNSigTofKaExpKa",
                     "fNSigTpcTofPiExpPi",
                     "fNSigTpcTofKaExpKa",
-                    # "fCosThetaStar",
+                    "fCosThetaStar",
                     # "fCt",
                     "fM", 
                     "fPt", 
@@ -148,7 +151,7 @@ def PrepareSamples(config):
                     "fNSigTofKaExpKa",
                     "fNSigTpcTofPiExpPi",
                     "fNSigTpcTofKaExpKa",
-                    # "fCosThetaStar",
+                    "fCosThetaStar",
                     # "fCt", 
                     "fM", 
                     "fPt", 

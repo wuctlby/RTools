@@ -1,14 +1,19 @@
 input:
   prompt:
-    [/home/wuct/ALICE/local/RTools/RTools/test/ML/McTreeForMLPromptTrain_medium_ptsmearing.root,/home/wuct/ALICE/local/RTools/RTools/test/ML/McTreeForMLPromptTrain_medium_ptsmearing1p5_phi.root]
+    [/home/wuct/ALICE/local/Results/checks/ML/inputDistr/McTreeForMLPromptTrain_m_ptsmearing.root,/home/wuct/ALICE/local/Results/checks/ML/inputDistr/McTreeForMLPromptTrain_m_ptsmearing1p5_phi.root]
   FD:
-    [/home/wuct/ALICE/local/RTools/RTools/test/ML/McTreeForMLFDTrain_medium_ptsmearing.root,/home/wuct/ALICE/local/RTools/RTools/test/ML/McTreeForMLFDTrain_medium_ptsmearing1p5_phi.root]
+    [/home/wuct/ALICE/local/Results/checks/ML/inputDistr/McTreeForMLFDTrain_m_ptsmearing.root,/home/wuct/ALICE/local/Results/checks/ML/inputDistr/McTreeForMLFDTrain_m_ptsmearing1p5_phi.root]
   data: [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample/DataTreeForMLTrain.root]
   treename: TreeForML
 
 output:
-  output_dir: /home/wuct/ALICE/local/RTools/RTools/test/Graph/Distributions/input/
-  suffix: 'free'
+  output_dir: /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/
+  suffix: 'log'
+
+func:
+  inputDistr: true
+  storeInvMass: false
+  reflection: false
 
 pt_ranges:
   min: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
@@ -19,30 +24,33 @@ pt_ranges:
 filters: {
   Prompt: {
       'fImpactParameterProduct': [-0.0001, 0., 10],
-      'fDecayLengthXY': [0, 0.06, 15],
+      'fDecayLengthXY': [0, 0.06, 10],
       'fCpa': [0.996, 1.0, 10],
-      'fDecayLengthNormalised': [0, 60, 30],
+      'fDecayLengthNormalised': [0, 60, 20],
+      'fCosThetaStar': [-1, 1, 10],
       "fNSigTpcTofPiExpPi": [0, 3, 15],
       "fNSigTpcTofKaExpKa": [0, 3, 15],
       'fDecayLength': [0, 0.1, 20],
       'fDecayLengthXYNormalised': [0, 60, 15],
       'fChi2PCA': [0, 0.1, 10],
       'fCpaXY': [0.996, 1.0, 10],
-      "fM": [1.65, 2.15, 120],
+      "fM": [1.65, 2.15, 50],
   },
   FD: {
       'fImpactParameterProduct': [-0.0004, 0., 20],
-      'fDecayLengthXY': [0, 0.5, 25],
+      'fDecayLengthXY': [0, 0.5, 20],
       'fCpa': [0.996, 1.0, 10],
-      'fDecayLengthNormalised': [0, 250, 25],
+      'fDecayLengthNormalised': [0, 250, 20],
+      'fCosThetaStar': [-1, 1, 10],
       "fNSigTpcTofPiExpPi": [0, 3, 15],
       "fNSigTpcTofKaExpKa": [0, 3, 15],
       'fDecayLength': [0, 0.4, 20],
       'fDecayLengthXYNormalised': [0, 500, 25],
       'fChi2PCA': [0, 0.1, 10],
       'fCpaXY': [0.996, 1.0, 10],
-      "fM": [1.55, 2.25, 120],
-  }
+      "fM": [1.65, 2.15, 50],
+  },
+  reflection_filter: true
 }
 
 plots:
@@ -51,6 +59,7 @@ plots:
     "fDecayLengthXY",
     "fCpa",
     "fDecayLengthNormalised",
+    "fCosThetaStar",
     "fNSigTpcTofPiExpPi",
     "fNSigTpcTofKaExpKa",
     "fDecayLength",
@@ -61,7 +70,6 @@ plots:
     # "fImpactParameter1",
     # "fImpactParameterNormalised0",
     # "fImpactParameterNormalised1",
-    # "fCosThetaStar",
     # "fCt",
     "fM", 
     "fPt",

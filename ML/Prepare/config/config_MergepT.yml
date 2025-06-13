@@ -1,15 +1,15 @@
 # inputFiles: [
-#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_medium_ptsmear1p5_phi_pt0_5_416908.root',
-#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_medium_ptsmear1p5_phi_pt5_36_416910.root'
+#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_pt0_5_418439.root',
+#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_pt5_36_418441.root'
 # ]
-# outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC'
+# outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts'
 # outputName: 'AO2D_MC_Pass3_medium_ptsmearing1p5_phi.root'
 # isMC: True # True for MC, False for DATA
 
 inputFiles: [
-  '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_medium_ptsmearing_pt0_5_416907.root',
-  '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/AO2D_MC_Pass3_medium_ptsmearing_pt5_36_416909.root'
+  '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing_pt0_5_421593.root',
+  '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing_pt5_36_418440.root'
 ]
-outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC'
+outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts'
 outputName: 'AO2D_MC_Pass3_medium_ptsmearing.root'
 isMC: True # True for MC, False for DATA
