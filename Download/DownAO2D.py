@@ -68,12 +68,12 @@ def main(config, check=False):
             if train_num == '':
                 down_task = [(nr, subfiles,
                                 f"{localpath}", 
-                                f"{path}/{fileName}.root",
+                                f"{path}/*{fileName}.root",
                                 ) for ipath, path in enumerate(paths_sucs)]
             else:
                 down_task = [(nr, subfiles,
                                 f"{localpath}/{train_num}/{ipath}/{fileName}.root", 
-                                f"{path}/{fileName}.root",
+                                f"{path}/*{fileName}.root",
                                 ) for ipath, path in enumerate(paths_sucs)]
             
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:

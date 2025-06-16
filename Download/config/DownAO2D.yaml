@@ -17,14 +17,31 @@
 # ]
 
 # pass4 PbPb 20-50%cc data used to train the ML model
+# nr: 16
+# train_num: "390575"
+# localpath: "/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/390575"
+# fileName: "AO2D"
+# max_workers: 10
+# # Path copied from the Hyperloop `Submitted Jobs` page
+# copypaths: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829371,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829370
+# ]
+# subpath: 'AOD'
+# subfiles: 0
+# copypaths_faild: [
+#   # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
+# ]
+# Stage_faild: [
+#   # Stage_1
+# ]
 nr: 16
-train_num: "390575"
-localpath: "/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/390575"
+train_num: "390574"
+localpath: "/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/"
 fileName: "AO2D"
 max_workers: 10
 # Path copied from the Hyperloop `Submitted Jobs` page
 copypaths: [
-  /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829371,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829370
+  /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829369,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829368
 ]
 subpath: 'AOD'
 subfiles: 0
