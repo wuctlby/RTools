@@ -16,27 +16,17 @@
 #   Stage_1
 # ]
 
-# Pass3 PbPb 20-50%cc
+# pass4 PbPb 20-50%cc data used to train the ML model
 nr: 16
-train_num: ""
-localpath: "/home/wuct/ALICE/local/RTools/Meta/MC/pass3/544122_1"
+train_num: "390575"
+localpath: "/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/390575"
 fileName: "AO2D"
 max_workers: 10
-
 # Path copied from the Hyperloop `Submitted Jobs` page
 copypaths: [
-  /alice/sim/2024/LHC24g2/0/544122/AOD/574,
-  /alice/sim/2024/LHC24g2/1/544122/AOD/526,
-  /alice/sim/2024/LHC24g2/1/544122/AOD/453,
-  /alice/sim/2024/LHC24g2/0/544122/AOD/350,
-  /alice/sim/2024/LHC24g2/0/544122/AOD/042,
-  /alice/sim/2024/LHC24g2/0/544122/AOD/053,
-  /alice/sim/2024/LHC24g2/0/544122/AOD/065,
-  /alice/sim/2024/LHC24g2/2/544122/AOD/121,
-  /alice/sim/2024/LHC24g2/0/544122/AOD/230,
-  /alice/sim/2024/LHC24g2/0/544122/AOD/289,
-
+  /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829371,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829370
 ]
+subpath: 'AOD'
 subfiles: 0
 copypaths_faild: [
   # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
@@ -44,3 +34,32 @@ copypaths_faild: [
 Stage_faild: [
   # Stage_1
 ]
+
+# # Pass3 PbPb 20-50%cc
+# nr: 16
+# train_num: ""
+# localpath: "/home/wuct/ALICE/local/RTools/Meta/MC/pass3/544122_1"
+# fileName: "AO2D"
+# max_workers: 10
+
+# # Path copied from the Hyperloop `Submitted Jobs` page
+# copypaths: [
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/574,
+#   /alice/sim/2024/LHC24g2/1/544122/AOD/526,
+#   /alice/sim/2024/LHC24g2/1/544122/AOD/453,
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/350,
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/042,
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/053,
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/065,
+#   /alice/sim/2024/LHC24g2/2/544122/AOD/121,
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/230,
+#   /alice/sim/2024/LHC24g2/0/544122/AOD/289,
+
+# ]
+# subfiles: 0 # used to download the metadata files
+# copypaths_faild: [
+#   # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
+# ]
+# Stage_faild: [
+#   # Stage_1
+# ]

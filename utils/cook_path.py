@@ -1,4 +1,4 @@
-
+import os
 
 
 def get_hp_outpath(copypaths, subpath = '/AOD'):
@@ -22,6 +22,6 @@ def get_hp_outpath(copypaths, subpath = '/AOD'):
         for copypath in copypaths:
             split_paths = copypath.split(',')
             for i in range(len(split_paths)):
-                split_paths[i] = split_paths[i] + subpath
+                split_paths[i] = os.path.join(split_paths[i], subpath)
             paths += split_paths
         return paths

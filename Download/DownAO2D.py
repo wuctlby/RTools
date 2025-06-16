@@ -6,13 +6,17 @@ import yaml
 sys.path.append('../')
 from utils.cook_path import get_hp_outpath
 
-def download_files(nr, localpath, filePath):
-    print(f"Downloading {filePath} to {localpath}")
-    os.system(f"alien.py cp -f -T {nr} {filePath} file:{localpath}")
+def download_files(nr, subfiles, localpath, filePath):
+    if subfiles != 0:
+        print(f"Downloading {filePath} to {localpath}/{filePath}")
+        os.system(f"alien.py cp -parent 99 -f -T {nr} {filePath} file:{localpath}")
+    else:
+        print(f"Downloading {filePath} to {localpath}")
+        os.system(f"alien.py cp -f -T {nr} {filePath} file:{localpath}")
 
 def download_file_wrapper(args):
-    nr, localpath, filePath = args
-    download_files(nr, localpath, filePath)
+    nr, subfiles, localpath, filePath,  = args
+    download_files(nr, subfiles, localpath, filePath)
 
 def main(config, check=False):
     # load configuration
@@ -28,24 +32,23 @@ def main(config, check=False):
     
     # paths and stages
     copypaths = config.get('copypaths', [])
+    subpath = config.get('subpath', '')
     subfiles = config.get('subfiles', 0)
     copypaths_faild = config.get('copypaths_faild', [])
     Stage_faild = config.get('Stage_faild', ['Stage_1'])
 
     # handle paths
-    for faild_path in copypaths_faild:
-        if faild_path in copypaths:
-            copypaths.remove(faild_path)
+    copypaths = list(set(config.get('copypaths', [])) - set(config.get('copypaths_faild', [])))
 
-    paths_sucs = get_hp_outpath(copypaths, '')
+    paths_sucs = get_hp_outpath(copypaths, subpath)
     if subfiles != 0:
         paths_sucs_sub = []
         for ipath, path in enumerate(paths_sucs):
-            for isub in range(1, subfiles):
+            for isub in range(1, subfiles+1):
                 isub = isub.__format__('04d')
                 paths_sucs_sub.append(f"{path}/{isub}")
         paths_sucs = paths_sucs_sub
-    pre_paths_faild = get_hp_outpath(copypaths_faild, '')
+    pre_paths_faild = get_hp_outpath(copypaths_faild, subpath)
     
     if len(Stage_faild) == 1 and len(Stage_faild) < len(pre_paths_faild):
         Stage_faild = [Stage_faild[0]] * len(pre_paths_faild)
@@ -62,16 +65,22 @@ def main(config, check=False):
     else:
         print("Starting file download...")
         if paths_sucs != ['']:
-            down_task = [(nr, 
-                            f"{localpath}/{train_num}/{ipath}/{fileName}.root", 
-                            f"{path}/{fileName}.root",
-                            ) for ipath, path in enumerate(paths_sucs)]
+            if train_num == '':
+                down_task = [(nr, subfiles,
+                                f"{localpath}", 
+                                f"{path}/{fileName}.root",
+                                ) for ipath, path in enumerate(paths_sucs)]
+            else:
+                down_task = [(nr, subfiles,
+                                f"{localpath}/{train_num}/{ipath}/{fileName}.root", 
+                                f"{path}/{fileName}.root",
+                                ) for ipath, path in enumerate(paths_sucs)]
             
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
                 executor.map(download_file_wrapper, down_task)
 
         if copypaths_faild != ['']:
-            down_task_faild = [(nr, 
+            down_task_faild = [(nr, subfiles,
                                 f"{localpath}/{train_num}/{ipath + len(paths_sucs)}",
                                 f"{path}/*{fileName}.root",
                                 ) for ipath, path in enumerate(paths_faild)]
