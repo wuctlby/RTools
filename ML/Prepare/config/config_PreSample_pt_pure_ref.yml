@@ -1,0 +1,42 @@
+# the configuration for PrepareSample.py
+inputDataFile: ''
+dataTree: 'TreeForML'
+
+# inputMcFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_merged.root'
+# mcTree: 'TreeForML'
+
+# outDir: '/home/wuct/ALICE/local/Results/checks/ML/inputDistr'
+# suffix: 'm_ptsmearing1p5_phi'
+inputMcFile: '/home/wuct/ALICE/otest/pure_reflection/AO2D_MC_Pass3_medium_ptsmearing_merged.root'
+mcTree: 'TreeForML'
+
+outDir: '/home/wuct/ALICE/local/Results/checks/ML/inputDistr/pure_reflection'
+suffix: 'm_ptsmearing_nofilter'
+pTmins: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]
+pTmaxs: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]
+
+low_edge: [1.78, 1.78, 1.78, 1.78, 1.76, 1.76, 1.75, 1.75, 1.72, 1.72, 1.72, 1.72]
+ll_edge: [1.68, 1.68, 1.68, 1.68, 1.67, 1.67, 1.66, 1.66, 1.65, 1.65, 1.65, 1.65]
+high_edge: [1.94, 1.94, 1.94, 1.94, 1.97, 1.97, 1.97, 1.97, 2.0, 2.0, 2.0, 2.0]
+hh_edge: [2.04, 2.04, 2.04, 2.04, 2.07, 2.07, 2.07, 2.07, 2.1, 2.1, 2.1, 2.1]
+
+data_filters: [
+  'fY > -0.8 && fY < 0.8',
+  'fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3',
+  'fCpa > 0.9'
+]
+
+mc_prompt_filters: [
+  'fOriginMcRec==1',
+  # 'fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3',
+  # 'fY > -0.8 && fY < 0.8',
+  # 'fCpa > 0.9'
+]
+
+mc_fd_filters: [
+  'fOriginMcRec==2',
+  # 'fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3',
+  # 'fY > -0.8 && fY < 0.8',
+  # 'fCpa > 0.9'
+]
+
