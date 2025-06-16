@@ -1,0 +1,82 @@
+input:
+  prompt:
+    [/home/wuct/ALICE/local/Results/checks/ML/inputDistr/pure_reflection/McTreeForMLPromptTrain_m_ptsmearing_nofilter.root]
+  FD:
+    [/home/wuct/ALICE/local/Results/checks/ML/inputDistr/pure_reflection/McTreeForMLFDTrain_m_ptsmearing_nofilter.root]
+  data: [/home/wuct/ALICE/local/DmesonAnalysis/RTools/ML/sample/DataTreeForMLTrain.root]
+  treename: TreeForML
+
+output:
+  output_dir: /home/wuct/ALICE/local/Results/checks/ML/inputDistr/pure_reflection
+  suffix: '2_set_no_filter'
+
+func:
+  inputDistr: false
+  storeInvMass: false
+  reflection: true
+
+pt_ranges:
+  min: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]  # list
+  max: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]  # list
+
+
+# [lower, upper, bins]
+filters: {
+  Prompt: {
+      'fImpactParameterProduct': [-0.0001, 0., 10],
+      'fDecayLengthXY': [0, 0.06, 10],
+      'fCpa': [0.996, 1.0, 10],
+      'fDecayLengthNormalised': [0, 60, 20],
+      'fCosThetaStar': [-1, 1, 10],
+      "fNSigTpcTofPiExpPi": [0, 3, 15],
+      "fNSigTpcTofKaExpKa": [0, 3, 15],
+      'fDecayLength': [0, 0.1, 20],
+      'fDecayLengthXYNormalised': [0, 60, 15],
+      'fChi2PCA': [0, 0.1, 10],
+      'fCpaXY': [0.996, 1.0, 10],
+      "fM": [1.65, 2.15, 50],
+  },
+  FD: {
+      'fImpactParameterProduct': [-0.0004, 0., 20],
+      'fDecayLengthXY': [0, 0.5, 20],
+      'fCpa': [0.996, 1.0, 10],
+      'fDecayLengthNormalised': [0, 250, 20],
+      'fCosThetaStar': [-1, 1, 10],
+      "fNSigTpcTofPiExpPi": [0, 3, 15],
+      "fNSigTpcTofKaExpKa": [0, 3, 15],
+      'fDecayLength': [0, 0.4, 20],
+      'fDecayLengthXYNormalised': [0, 500, 25],
+      'fChi2PCA': [0, 0.1, 10],
+      'fCpaXY': [0.996, 1.0, 10],
+      "fM": [1.65, 2.15, 50],
+  },
+  reflection_filter: true
+}
+
+plots:
+  plotting_columns: [
+    "fImpactParameterProduct",
+    "fDecayLengthXY",
+    "fCpa",
+    "fDecayLengthNormalised",
+    "fCosThetaStar",
+    "fNSigTpcTofPiExpPi",
+    "fNSigTpcTofKaExpKa",
+    "fDecayLength",
+    "fDecayLengthXYNormalised",
+    "fChi2PCA",
+    "fCpaXY",
+    # "fImpactParameter0",
+    # "fImpactParameter1",
+    # "fImpactParameterNormalised0",
+    # "fImpactParameterNormalised1",
+    # "fCt",
+    "fM", 
+    "fPt",
+    "fPtProng0",
+    "fPtProng1"
+    ]
+  leg_labels:
+    Bkg: Background
+    Prompt: [ptSmear]
+    FD: [ptSmear]
