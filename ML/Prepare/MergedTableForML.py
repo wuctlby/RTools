@@ -63,7 +63,7 @@ def merge_DF_singeFile(inputdirs, inputName, doMerge=True):
         # loop over all keys
         for key in listofkeys:
             # if key is the inputName, write the path to input.txt
-            if key == inputName:
+            if inputName in key:
                 # get tge outfile name
                 keyName = key.split(".")[0]
                 if doMerge:

@@ -72,7 +72,7 @@ def main(config, check=False):
                                 ) for ipath, path in enumerate(paths_sucs)]
             else:
                 down_task = [(nr, subfiles,
-                                f"{localpath}/{train_num}/{ipath}/{fileName}.root", 
+                                f"{localpath}/{train_num}/{ipath}", 
                                 f"{path}/*{fileName}.root",
                                 ) for ipath, path in enumerate(paths_sucs)]
             
