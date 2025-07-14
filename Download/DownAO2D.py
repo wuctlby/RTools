@@ -3,7 +3,8 @@ import sys
 import argparse
 import concurrent.futures
 import yaml
-sys.path.append('../')
+work_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(work_path, '../'))
 from utils.cook_path import get_hp_outpath
 
 def download_files(nr, subfiles, localpath, filePath):
@@ -41,13 +42,13 @@ def main(config, check=False):
     copypaths = list(set(config.get('copypaths', [])) - set(config.get('copypaths_faild', [])))
 
     paths_sucs = get_hp_outpath(copypaths, subpath)
-    if subfiles != 0:
-        paths_sucs_sub = []
-        for ipath, path in enumerate(paths_sucs):
-            for isub in range(1, subfiles+1):
-                isub = isub.__format__('04d')
-                paths_sucs_sub.append(f"{path}/{isub}")
-        paths_sucs = paths_sucs_sub
+    # if subfiles != 0:
+    #     paths_sucs_sub = []
+    #     for ipath, path in enumerate(paths_sucs):
+    #         for isub in range(1, subfiles+1):
+    #             isub = isub.__format__('04d')
+    #             paths_sucs_sub.append(f"{path}/{isub}")
+    #     paths_sucs = paths_sucs_sub
     pre_paths_faild = get_hp_outpath(copypaths_faild, subpath)
     
     if len(Stage_faild) == 1 and len(Stage_faild) < len(pre_paths_faild):
@@ -63,17 +64,27 @@ def main(config, check=False):
             if not os.path.isfile(file_to_check):
                 print(f"File does not exist: {file_to_check} ==> {path}")
     else:
+        if '.' in fileName:
+            fileName = fileName
+        else:
+            fileName = f"{fileName}.root"
         print("Starting file download...")
         if paths_sucs != ['']:
             if train_num == '':
                 down_task = [(nr, subfiles,
                                 f"{localpath}", 
-                                f"{path}/*{fileName}.root",
+                                f"{path}/*{fileName}",
+                                ) for ipath, path in enumerate(paths_sucs)]
+            elif train_num == -1:
+                # print([path.split("/")[-2] for path in paths_sucs])
+                down_task = [(nr, subfiles,
+                                f"{localpath}/{path.split('/')[-2]}",
+                                f"{path}/*{fileName}",
                                 ) for ipath, path in enumerate(paths_sucs)]
             else:
                 down_task = [(nr, subfiles,
                                 f"{localpath}/{train_num}/{ipath}", 
-                                f"{path}/*{fileName}.root",
+                                f"{path}/*{fileName}",
                                 ) for ipath, path in enumerate(paths_sucs)]
             
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:

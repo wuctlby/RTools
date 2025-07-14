@@ -1,7 +1,7 @@
 import os
 
 
-def get_hp_outpath(copypaths, subpath = '/AOD'):
+def get_hp_outpath(copypaths, subpath = ''):
     '''
     Get the paths from the copy of train output.
 

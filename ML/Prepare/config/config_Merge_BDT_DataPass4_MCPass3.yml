@@ -15,10 +15,14 @@
 # isMC: True # True for MC, False for DATA
 
 # DATA
-doMergeDF: true
-doMergeTable: true
-doFinalMerge: true
-inputdir: '/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/Data'
-inputName: 'AO2D'
-isMC: false
-max_works: 16
+inputFiles: [
+  /data/meta/BDT/DataPass4_MCPass3/Data
+]
+outputPath: '/data/meta/BDT/DataPass4_MCPass3/Data/merged'
+outputName: 'AO2D_DATA_Pass4.root'
+isMC: False # True for MC, False for DATA
+max_workers: 2
+doDFMerge: False
+doTableMerge: False
+tableMergedSuffix: 'DataTreeForMLTrain_DataPass4_MCPass3_0_1.root'
+doFinalMerge: True

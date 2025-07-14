@@ -19,9 +19,9 @@
 # pass4 PbPb 20-50%cc data used to train the ML model
 # nr: 16
 # train_num: "390575"
-# localpath: "/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/390575"
+# localpath: "/data/meta/BDT/DataPass4_MCPass3/Data"
 # fileName: "AO2D"
-# max_workers: 10
+# max_workers: 32
 # # Path copied from the Hyperloop `Submitted Jobs` page
 # copypaths: [
 #   /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829371,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829370
@@ -36,9 +36,9 @@
 # ]
 nr: 28
 train_num: "390574"
-localpath: "/home/wuct/ALICE/local/RTools/Meta/BDT/DataPass4_MCPass3/"
+localpath: "/data/meta/BDT/DataPass4_MCPass3/Data"
 fileName: "AO2D"
-max_workers: 28
+max_workers: 32
 # Path copied from the Hyperloop `Submitted Jobs` page
 copypaths: [
   /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829369,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829368

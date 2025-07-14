@@ -4,8 +4,10 @@ Merge the tables for ML from the input files.
 
 import os
 import sys
+import gc
 import pandas as pd
 import concurrent.futures
+import multiprocessing
 import uproot
 import ROOT
 import yaml
@@ -19,11 +21,16 @@ def Get_DFName(path_to_file):
     print(f"DFName: {DFName}")
     if len(DFName) > 2:
         print("Warning: More than one DF in the file")
-        exit()
+        if 'parentFiles' in DFName:
+            DFName.remove('parentFiles')
+        else:
+            print("Error: More than one DF in the file and no 'parentFiles' found")
+            exit()
     if len(DFName) == 0:
         print("Error: No DF found in the file")
         exit()
     input_file.Close()
+    del input_file
     
     return DFName[0]
 def merge_dataframes(*args):
@@ -57,7 +64,7 @@ def merge_tables(*args):
     else:
         df_pt_eta_phi_mass_y = table_merged["O2hfd0base"].arrays(library="pd")
         df_pars = table_merged["O2hfd0par"].arrays(library="pd")
-        df_cts = table_merged["O2hfd0pbase"].arrays(library="pd")
+        df_cts = table_merged["O2hfd0pare"].arrays(library="pd")
         df_selflag = table_merged["O2hfd0sel"].arrays(library="pd")
 
         df_merged = pd.concat([df_pt_eta_phi_mass_y, df_pars, df_cts, df_selflag], axis=1)  # DATA
@@ -69,7 +76,9 @@ def merge_tables(*args):
         root_file.mktree(df_name, df_merged.dtypes.to_dict())
         root_file[df_name].extend(df_merged.to_dict(orient='list'))
     root_file.close()
+    del root_file
     input_file.close()
+    del input_file
     return output_file
 
 def multi_thread(func, *args, max_workers=4):
@@ -83,6 +92,26 @@ def multi_thread(func, *args, max_workers=4):
                 print(f"Error in thread: {e}")
     return results
 
+def multi_process(func, *args, max_workers=4):
+
+    with multiprocessing.Pool(processes=max_workers) as pool:
+        try:
+            results = pool.starmap(func, zip(*args))
+            
+            flat_results = []
+            for result in results:
+                if isinstance(result, list):
+                    flat_results.extend(result)
+                else:
+                    flat_results.append(result)
+            return flat_results
+        except Exception as e:
+            print(f"Error in process pool: {e}")
+            raise
+        finally:
+            pool.close()
+            pool.join()
+
 def main(config):
     
     with open(config, 'r') as file:
@@ -92,28 +121,61 @@ def main(config):
     outputPath = cfg.get("outputPath", "")
     outputName = cfg.get("outputName", time.strftime("%Y%m%d_%H%M%S") + "_merged.root")
     isMC = cfg.get("isMC", False)
+    max_workers = cfg.get("max_workers", 4)
+    doDFMerge = cfg.get("doDFMerge", True)
+    doTableMerge = cfg.get("doTableMerge", True)
+    tableMergedSuffix = cfg.get("tableMergedSuffix", "_tableMerged.root")
+    doFinalMerge = cfg.get("doFinalMerge", True)
     nFile = len(inputFiles)
     
-    print("Merging dataframes...")
-    dfMerged_files = multi_thread(merge_dataframes, inputFiles, [outputPath]*nFile)
-    print("Merging tables...")
-    tableMerged_files = multi_thread(merge_tables, dfMerged_files, [isMC]*nFile)
-    
-    print(f"Merged different files to: {outputPath}")
-    with open(f'{outputPath}/input.txt', 'w') as f:
-        for file in tableMerged_files:
-            f.write(file + '\n')
-    outputName = outputName.replace(".root", "_merged.root")
-    command = f"hadd -f {os.path.join(outputPath, outputName)} " + " ".join(tableMerged_files)
-    os.system(command)
+    # condition checks
+    loadfile = False
+    for file in inputFiles:
+        if not file.endswith('.root'):
+            print('Processing inputFiles as root path')
+            loadfile = True
+            break
+    if loadfile:
+        inputFiles_new = []
+        for file in inputFiles:
+            for root, _, files in os.walk(file):
+                inputFiles_new.extend([os.path.join(root, name) for name in files if name == 'AO2D.root'])
+        inputFiles = inputFiles_new
+        nFile = len(inputFiles)
 
-    print(f"Final merged file: {os.path.join(outputPath, outputName)}")
-    if os.path.exists(os.path.join(outputPath, outputName)):
-        for file in tableMerged_files + dfMerged_files:
-            if os.path.exists(os.path.join(outputPath, file)):
-                os.remove(os.path.join(outputPath, file))
-            if os.path.exists(os.path.join(outputPath, 'input.txt')):
-                os.remove(os.path.join(outputPath, 'input.txt'))
+    if doDFMerge:
+        print("Merging dataframes...")
+        dfMerged_files = multi_thread(merge_dataframes, inputFiles, [outputPath]*nFile, max_workers=max_workers)
+    else:
+        dfMerged_files = []
+        for input in cfg.get("inputFiles", []):
+            for root, _, files in os.walk(input):
+                dfMerged_files.extend([os.path.join(root, name) for name in files if name.endswith('_DFmerged.root')])
+
+    if doTableMerge:
+        print("Merging tables using multiprocessing...")
+        tableMerged_files = []
+        for i in range(0, len(dfMerged_files), max_workers):
+            chunk = dfMerged_files[i:i+max_workers]
+            results = multi_process(merge_tables, chunk, [isMC]*len(chunk), max_workers=max_workers)
+            tableMerged_files.extend(results)
+            del results
+            gc.collect()
+            print(f"Processed chunk {i//max_workers + 1}/{(len(dfMerged_files) + max_workers - 1) // max_workers}")
+            
+    else:
+        dfMerged_files, tableMerged_files = [], []
+        for input in cfg.get("inputFiles", []):
+            for root, _, files in os.walk(input):
+                tableMerged_files.extend([os.path.join(root, name) for name in files if name.endswith(tableMergedSuffix)])
+                dfMerged_files.extend([os.path.join(root, name) for name in files if name.endswith('_DFmerged.root')])
+
+    if doFinalMerge:
+        print(f"Merged different files to: {outputPath}")
+        os.makedirs(f"{outputPath}", exist_ok=True)
+        outputName = outputName.replace(".root", "_merged.root")
+        command = f"hadd -f -k -j 16 -n 2 {os.path.join(outputPath, outputName)} " + " ".join(tableMerged_files)
+        os.system(command)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments")

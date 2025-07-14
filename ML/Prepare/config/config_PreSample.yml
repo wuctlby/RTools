@@ -2,11 +2,11 @@
 inputDataFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/DATA/50100/322768/AO2D_merged.root'
 dataTree: 'TreeForML'
 
-inputMcFile: '/media/wuct/wulby/ALICE/AnRes/D0_flow/pass4/ML/MC/AO2D_medium_50100_OccPIDCal_322973_merged.root'
+inputMcFile: ''
 mcTree: 'TreeForML'
 
-outDir: '/home/wuct/ALICE/local/RTools/RTools/ML/Trainning/sample'
-suffix: '6080'
+outDir: '/data/meta/BDT/DataPass4_MCPass3/Data'
+suffix: 'filtered'
 
 pTmins: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]
 pTmaxs: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]
