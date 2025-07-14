@@ -4,7 +4,7 @@ vim ~/.local/share/applications/root-tbrowser.desktop
 Version=1.0
 Type=Application
 Name=ROOT TBrowser
-Exec=gnome-terminal -- bash -c 'python3 /home/wuct/ALICE/local/RTools/RTools/Tools/OpenNewTBrowser.py "%f"; exit'
+Exec=gnome-terminal -- bash /home/wuct/ALICE/local/RTools/RTools/Tools/Linux/OpenNewTBrowser.sh %f
 Icon=root
 Terminal=false
 MimeType=application/x-root;
