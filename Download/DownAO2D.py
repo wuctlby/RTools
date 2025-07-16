@@ -42,6 +42,7 @@ def main(config, check=False):
     copypaths = list(set(config.get('copypaths', [])) - set(config.get('copypaths_faild', [])))
 
     paths_sucs = get_hp_outpath(copypaths, subpath)
+    paths_sucs.sort()
     # if subfiles != 0:
     #     paths_sucs_sub = []
     #     for ipath, path in enumerate(paths_sucs):
