@@ -1,8 +1,6 @@
 import sys
 import os
 
-sys.path.append("/home/wuct/software/root/lib")  # 添加此行到 import ROOT 之前
-
 import ROOT
 
 def main():

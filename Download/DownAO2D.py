@@ -10,7 +10,7 @@ from utils.cook_path import get_hp_outpath
 def download_files(nr, subfiles, localpath, filePath):
     if subfiles != 0:
         print(f"Downloading {filePath} to {localpath}/{filePath}")
-        os.system(f"alien.py cp -parent 99 -f -T {nr} {filePath} file:{localpath}")
+        os.system(f"alien.py cp -f -T {nr} {filePath} file:{localpath}")
     else:
         print(f"Downloading {filePath} to {localpath}")
         os.system(f"alien.py cp -f -T {nr} {filePath} file:{localpath}")
@@ -74,18 +74,18 @@ def main(config, check=False):
             if train_num == '':
                 down_task = [(nr, subfiles,
                                 f"{localpath}", 
-                                f"{path}/*{fileName}",
+                                f"{path}/{fileName}",
                                 ) for ipath, path in enumerate(paths_sucs)]
             elif train_num == -1:
                 # print([path.split("/")[-2] for path in paths_sucs])
                 down_task = [(nr, subfiles,
-                                f"{localpath}/{path.split('/')[-2]}",
-                                f"{path}/*{fileName}",
+                                f"{localpath}/{path.split('/')[-2]}/{fileName}",
+                                f"{path}/{fileName}",
                                 ) for ipath, path in enumerate(paths_sucs)]
             else:
                 down_task = [(nr, subfiles,
-                                f"{localpath}/{train_num}/{ipath}", 
-                                f"{path}/*{fileName}",
+                                f"{localpath}/{train_num}/{ipath}/",
+                                f"{path}/{fileName}",
                                 ) for ipath, path in enumerate(paths_sucs)]
             
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -94,7 +94,7 @@ def main(config, check=False):
         if copypaths_faild != ['']:
             down_task_faild = [(nr, subfiles,
                                 f"{localpath}/{train_num}/{ipath + len(paths_sucs)}",
-                                f"{path}/*{fileName}.root",
+                                f"{path}/*{fileName}",
                                 ) for ipath, path in enumerate(paths_faild)]
             
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:

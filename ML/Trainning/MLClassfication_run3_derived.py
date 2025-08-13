@@ -815,7 +815,8 @@ def main(): #pylint: disable=too-many-statements
     promptHandler.slice_data_frame('fPt', ptBins, True)
     if fdHandler is not None:
         fdHandler.slice_data_frame('fPt', ptBins, True)
-    dataHandler.slice_data_frame('fPt', ptBins, True)
+    if inputConfig['data_prep']['filt_bkg_mass']:
+        dataHandler.slice_data_frame('fPt', ptBins, True)
     bkgHandler.slice_data_frame('fPt', ptBins, True)
     print('Loading and preparing data files: Done!')
 

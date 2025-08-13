@@ -512,7 +512,7 @@ def train_test(inputConfig, ptBin, outputDirPt, trainTestData, iBin): #pylint: d
         print('Performing hyper-parameters optimisation: ...', end='\r')
         outFileHyperPars = open(f'{outputDirPt}/HyperParsOpt_pT_{ptBin[0]}_{ptBin[1]}.txt', 'wt')
         sys.stdout = outFileHyperPars
-        modelHandler.optimize_params_optuna(trainTestData, optunaConfig, cross_val_scoring='roc_auc_ovo', timeout=inputConfig['ml']['hyper_pars_opt']['timeout'], n_jobs=inputConfig['ml']['hyper_pars_opt']['njobs'], n_trials=inputConfig['ml']['hyper_pars_opt']['ntrials'], direction='maximize')
+        modelHandler.optimize_params_optuna(trainTestData, optunaConfig, cross_val_scoring='roc_auc_ovo', n_jobs=inputConfig['ml']['hyper_pars_opt']['njobs'], n_trials=inputConfig['ml']['hyper_pars_opt']['ntrials'], direction='maximize')
         outFileHyperPars.close()
         sys.stdout = sys.__stdout__
         print('Performing hyper-parameters optimisation: Done!')
@@ -824,7 +824,10 @@ def main(): #pylint: disable=too-many-statements
     promptHandler.slice_data_frame('fPt', ptBins, True)
     if fdHandler is not None:
         fdHandler.slice_data_frame('fPt', ptBins, True)
-    dataHandler.slice_data_frame('fPt', ptBins, True)
+    else:
+        print('\033[93mWARNING: No FD data provided, skipping FD slicing!\033[0m')
+    if inputConfig['data_prep']['filt_bkg_mass']:
+        dataHandler.slice_data_frame('fPt', ptBins, True)
     bkgHandler.slice_data_frame('fPt', ptBins, True)
     print('Loading and preparing data files: Done!')
 
