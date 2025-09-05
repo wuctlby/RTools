@@ -1,0 +1,213 @@
+apply:
+  column_to_save_list:
+  - fChi2PCA
+  - fCpa
+  - fCpaXY
+  - fDecayLength
+  - fDecayLengthNormalised
+  - fDecayLengthXY
+  - fDecayLengthXYNormalised
+  - fPtProng0
+  - fPtProng1
+  - fImpactParameter0
+  - fImpactParameter1
+  - fImpactParameterNormalised0
+  - fImpactParameterNormalised1
+  - fImpactParameterProduct
+  - fNSigTpcPiExpPi
+  - fNSigTpcKaExpKa
+  - fNSigTofPiExpPi
+  - fNSigTofKaExpKa
+  - fNSigTpcTofPiExpPi
+  - fNSigTpcTofKaExpKa
+  - fCosThetaStar
+  - fM
+  - fPt
+  - fCandidateSelFlag
+data_prep:
+  channel: D0ToKPi
+  class_balance:
+    bkg_factor:
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    - 1.0
+    option: equal
+  filt_bkg_mass: null
+  seed_split: 42
+  test_fraction: 1
+input:
+  FD:
+  - /data/meta/BDT/DataPass4_MCPass3/Data/sample/McTreeForMLFDTrain_nophi_DataPass4_MCPass3_2_3.root
+  data:
+  - /data/meta/BDT/DataPass4_MCPass3/Data/sample/DataTreeForMLTrain_DataPass4_MCPass3_2_3.root
+  prompt:
+  - /data/meta/BDT/DataPass4_MCPass3/Data/sample/McTreeForMLPromptTrain_nophi_DataPass4_MCPass3_2_3.root
+  treename: TreeForML
+ml:
+  hyper_pars:
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  - learning_rate: 0.01
+    max_depth: 4
+    min_child_weight: 5
+    n_estimators: 1000
+    n_jobs: 24
+    tree_method: hist
+  hyper_pars_opt:
+    activate: true
+    hyper_par_ranges:
+      colsample_bytree: !!python/tuple
+      - 0.7
+      - 1.0
+      learning_rate: !!python/tuple
+      - 0.005
+      - 0.025
+      max_depth: !!python/tuple
+      - 3
+      - 5
+      min_child_weight: !!python/tuple
+      - 1
+      - 10
+      n_estimators: !!python/tuple
+      - 300
+      - 1800
+      subsample: !!python/tuple
+      - 0.7
+      - 1.0
+    njobs: 30
+    ntrials: 12
+    timeout: 1800
+  raw_output: false
+  roc_auc_approach: ovo
+  roc_auc_average: macro
+  saved_models: &id001
+  - /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Data4MC3_nopid_nonorm/pt2_3/pt2_3/ModelHandler_D0ToKPi_pT_2_3.pickle
+  training_vars:
+  - fCpaXY
+  - fCpa
+  - fDecayLength
+  - fDecayLengthNormalised
+  - fDecayLengthXY
+  - fImpactParameter0
+  - fImpactParameter1
+  - fImpactParameterProduct
+  - fNSigTpcTofPiExpPi
+  - fNSigTpcTofKaExpKa
+  - fCosThetaStar
+output:
+  dir: /home/wuct/ALICE/local/RTools/RTools/ML/Trainning/results/Data4MC3_nophi/pt2_3
+  leg_labels:
+    Bkg: Background
+    FD: NonPrompt
+    Prompt: Prompt
+  out_labels:
+    Bkg: Bkg
+    FD: NonPrompt
+    Prompt: Prompt
+plots:
+  plotting_columns:
+  - fChi2PCA
+  - fCpa
+  - fCpaXY
+  - fDecayLength
+  - fDecayLengthNormalised
+  - fDecayLengthXY
+  - fDecayLengthXYNormalised
+  - fImpactParameter0
+  - fImpactParameter1
+  - fImpactParameterProduct
+  - fNSigTpcPiExpPi
+  - fNSigTpcKaExpKa
+  - fNSigTofPiExpPi
+  - fNSigTofKaExpKa
+  - fNSigTpcTofPiExpPi
+  - fNSigTpcTofKaExpKa
+  - fCosThetaStar
+  - fM
+  - fPt
+  train_test_log: true
+pt_ranges:
+  max:
+  - 3
+  min:
+  - 2
+saved_models: *id001

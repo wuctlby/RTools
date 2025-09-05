@@ -1,14 +1,25 @@
 # ______________________________________________________________________________________________________________________________________________________
 #        1    2     3     4     5     6     7     8     9     10    11    12    13    14    15    16
-ptmins: [0.5,  1,    1.5,  2,    2.5,  3,    3.5,  4,    5,    6,    7,    8,    10,   12,   16]
-ptmaxs: [1,   1.5,  2,    2.5,  3,    3.5,  4,    5,    6,    7,    8,    10,   12,   16,   24]
+ptmins: [0 ,   1,    2,    3,    4,    5,    6,    7,    8,    10,   12,   16]
+ptmaxs: [1 ,   2,    3,    4,    5,    6,    7,    8,    10,   12,   16,   24]
 
 inputFiles: [
-      /home/wuct/ALICE/local/Results/BDT/k3050/pre/sigma/sp/proj/projsigma.root
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_0_1_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_1_2_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_2_3_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_3_4_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_4_5_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_5_6_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_6_7_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_7_8_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_8_10_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_10_12_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_12_16_ref.root,
+      /home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/InvMass/InvMass_pT_16_24_ref.root,
 ]
-outputDir: '/home/wuct/ALICE/local/Results/BDT/k3050/pre'
-cent: 'k3050'
-suffix: 'Sigma'
+outputDir: '/home/wuct/ALICE/local/Results/checks/ML/inputDistr/input/input_ref/fit/ptSmear1.5_phi_FD/'
+cent: '3050'
+suffix: 'hist_bkg_ref'
 
 #______________________________________________________________________________________________________________________________________________________
 # used for the fit
@@ -21,12 +32,12 @@ FixMean: 0
 MeanFile: ''
        #    0.5-1   1-1.5  1.5-2  2-2.5  2.5-3  3-3.5  3.5-4  4-5   5-6   6-7    7-8   8-10  10-12  12-16  16-24
 # NSigma4SB: [4,    4,     4,     4,     4,     4,     4,     4,    4,    4,     4,    4,    4,     4,     4]
-MassMin: [  1.72, 1.72,  1.72,  1.72,  1.72,  1.72,  1.70,  1.70, 1.70, 1.70,  1.70, 1.68, 1.68,  1.68,  1.66]
-MassMax: [  2.02, 2.02,  2.02,  2.02,  2.02,  2.02,  2.02,  2.04, 2.04, 2.06,  2.02, 2.06, 2.06,  2.06,  2.06]
-Rebin: [    2,    2,     2,     2,     2,     2,     4,     4,    4,    4,     4,    4,    6,     8,     8]
-BkgFunc: [ 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo', 'expo' ]
-SgnFunc: [ 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian', 'gaussian' ]
-BkgFuncVn: ['kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin', 'kLin' ]
+MassMin: [  1.65, 1.65,  1.65,  1.65,  1.65,  1.65,  1.65,  1.65, 1.65,  1.65, 1.65, 1.65,  1.65,  1.65]
+MassMax: [  2.15, 2.15,  2.15,  2.15,  2.15,  2.15,  2.15,  2.15, 2.15,  2.15, 2.15, 2.15,  2.15,  2.15]
+Rebin: [    2,    2,     2,     2,     2,     2,     2,     2,    2,    2,     2,    2,    2,     2,     2]
+BkgFunc: [ 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0' ]
+SgnFunc: [ 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm', 'doublecbsymm' ]
+BkgFuncVn: ['chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0', 'chebpol0' ]
 # only for D0
 # if `enableRef` is set to `true`,  and `ReflFile` is empty, then `ReflFile` will be aotumatically filled.
 enableRef: false #reflection for D0.

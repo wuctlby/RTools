@@ -1,0 +1,278 @@
+input:
+  prompt:
+    [/data/meta/BDT/DataPass4_MCPass4/samples/McTreeForMLPromptTrain_4_5.root]
+  FD:
+    [/data/meta/BDT/DataPass4_MCPass4/samples/McTreeForMLFDTrain_4_5.root]
+  data: [/data/meta/BDT/DataPass4_MCPass4/samples/DataTreeForMLTrain_4_5.root]
+  treename: TreeForML
+
+data_prep:
+  channel: D0ToKPi # options: D0ToKPi, DplusToPiKPi, DsToKKPi, LcToPKPi, XicToPKPi
+  filt_bkg_mass: 0 # fM > 1.65 & fM < 2.1   # pandas query to select bkg candidates
+  class_balance:
+    option: equal # change how the dataset is built, options available: 'equal', 'max_signal'
+      # 'equal' -> same number of prompt/FD/bkg (not using all the signal available)
+      # 'max_signal' -> try to use all the signal (prompt and FD) + add n_bkg = 2 * (n_prompt + n_FD)
+    # bkg_factor: [1., 1., 1., 1., 1., 1.] # list of multipliers for (nPrompt + nFD) used to determine nCandBkg in the 'max_signal' option
+    bkg_factor: [1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.] # list of multipliers for (nPrompt + nFD) used to determine nCandBkg in the 'max_signal' option
+  seed_split: 42  
+  #test_fraction: 0.3
+  test_fraction: 0.1
+pt_ranges:
+  min: [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16]
+  max: [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 24]
+  # min: [5, 6, 7, 8, 10, 12, 16]
+  # max: [6, 7, 8, 10, 12, 16, 24]
+  # min: [2, 5, 8, 12]  # list
+  # max: [3, 6, 10,16]  # list
+  # max: [2]  # list
+  # min: [24, 36]
+  # max: [36, 50]
+
+# # Sigma: [0.018, 0.018, 0.02, 0.02, 0.025, 0.025, 0.03, 0.03, 0.035, 0.04, 0.05, 0.05]
+# mass_windows:
+#   low_edge: [1.78, 1.78, 1.78, 1.78, 1.75, 1.75, 1.75, 1.75, 1.72, 1.72, 1.72, 1.72]
+#   high_edge: [1.94, 1.94, 1.94, 1.94, 1.97, 1.97, 1.97, 1.97, 2.0, 2.0, 2.0, 2.0]
+
+ml:
+  raw_output: false
+  roc_auc_approach: ovo
+  roc_auc_average: macro
+  training_vars: [
+    "fCpaXY",
+    "fCpa",
+    # "fCpaXY",
+    "fDecayLength",
+    # "fDecayLengthNormalised",
+    "fDecayLengthXY",
+    # "fDecayLengthXYNormalised",
+    # "fImpactParameter0",
+    # "fImpactParameter1",
+    # "fImpactParameterNormalised0",
+    # "fImpactParameterNormalised1",
+    "fImpactParameterProduct",
+    # "fNSigTpcPiExpPi",
+    # "fNSigTpcKaExpKa",
+    # "fNSigTofPiExpPi",
+    # "fNSigTofKaExpKa",
+    "fNSigTpcTofPiExpPi",
+    "fNSigTpcTofKaExpKa",
+    # "fCosThetaStar",
+    # "fCt"
+  ]
+  
+  # ["fCpa","fDecayLength","fImpactParameter0","fImpactParameter1","fImpactParameterNormalised0","fImpactParameterNormalised1","fCosThetaStar","fDecayLengthXY", "fDecayLengthXYNormalised", "fCpaXY", "fImpactParameterProduct", 
+  # "fNSigTpcTofPiExpPi", "fNSigTpcTofKaExpKa"]
+
+  hyper_pars: [
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    }, 
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    },
+    {
+      "max_depth": 4,
+      "learning_rate": 0.01,
+      "n_estimators": 1000,
+      "min_child_weight": 5,
+      "n_jobs": 24,
+      "tree_method": hist,
+    } 
+    
+    ]
+  hyper_pars_opt:
+    # activate: false
+    activate: true
+    ntrials: 25
+    njobs: 5
+    timeout: 9999
+    hyper_par_ranges:
+      {
+        "max_depth": !!python/tuple [3, 5],
+        "learning_rate": !!python/tuple [0.005, 0.025],
+        "n_estimators": !!python/tuple [300, 1800],
+        "min_child_weight": !!python/tuple [1, 10],
+        "subsample": !!python/tuple [0.7, 1.],
+        "colsample_bytree": !!python/tuple [0.7, 1.]
+      }
+  saved_models: [
+            /data/meta/BDT/DataPass4_MCPass4/Trainning/test_noPID/pt4_5/ModelHandler_D0ToKPi_pT_4_5.pickle
+          ]
+
+
+output:
+  # dir: Training_PID_meds_hp
+  # dir: applys
+  #dir: Models_test/test_noPID
+  # dir: ModelForTest
+  dir: /data/meta/BDT/DataPass4_MCPass4/Trainning/D4M4_PID_med
+  leg_labels: # legend labels, keep the right number of classes
+    Bkg: Background
+    Prompt: Prompt
+    FD: NonPrompt
+  out_labels: # output labels, keep the right number of classes
+    Bkg: Bkg
+    Prompt: Prompt
+    FD: NonPrompt
+  
+plots:
+    # plotting_columns: ["fDecayLength", "fDecayLengthXY", "fCpa", "fCpaXY", "fImpactParameterProduct", "fM", "fPt"]
+    plotting_columns: [ 
+      # "fChi2PCA",
+      "fCpa",
+      "fCpaXY",
+      "fDecayLength",
+      # "fDecayLengthNormalised",
+      "fDecayLengthXY",
+      # "fDecayLengthXYNormalised",
+      # "fPtProng0",
+      # "fPtProng1",
+      # "fImpactParameter0",
+      # "fImpactParameter1",
+      # "fImpactParameterNormalised0",
+      # "fImpactParameterNormalised1",
+      "fImpactParameterProduct",
+      # "fNSigTpcPiExpPi",
+      # "fNSigTpcKaExpKa",
+      # "fNSigTofPiExpPi",
+      # "fNSigTofKaExpKa",
+      "fNSigTpcTofPiExpPi",
+      "fNSigTpcTofKaExpKa",
+      # "fCosThetaStar",
+      # "fCt",
+      "fM",
+      "fPt"
+    ]
+    # plotting_columns: ["cpa", "cpaXY", "decayLength", "decayLengthXY", "impactParameterProduct", "fM", "fPt"]
+                       # list of variables to plot
+    train_test_log: True # use log scale for plots of train and test distributions
+
+apply: 
+    # column_to_save_list: ["fDecayLength", "fDecayLengthXY", "fCpa", "fCpaXY", "fImpactParameterProduct", "fM", "fPt"]
+    column_to_save_list: [    
+      "fChi2PCA",
+      "fCpa",
+      "fCpaXY",
+      "fDecayLength",
+      "fDecayLengthNormalised",
+      "fDecayLengthXY",
+      "fDecayLengthXYNormalised",
+      "fPtProng0",
+      "fPtProng1",
+      "fImpactParameter0",
+      "fImpactParameter1",
+      "fImpactParameterNormalised0",
+      "fImpactParameterNormalised1",
+      "fImpactParameterProduct",
+      "fNSigTpcPiExpPi",
+      "fNSigTpcKaExpKa",
+      "fNSigTofPiExpPi",
+      "fNSigTofKaExpKa",
+      "fNSigTpcTofPiExpPi",
+      "fNSigTpcTofKaExpKa",
+      "fCosThetaStar",
+      # "fCt",
+      "fM",
+      "fPt","fCandidateSelFlag"
+    ]
+    # column_to_save_list: ["cpa", "cpaXY", "decayLength", "decayLengthXY", "impactParameterProduct", "fM", "fPt"]
+    # list of variables saved in the dataframes with the applied models 

@@ -34,23 +34,23 @@
 # Stage_faild: [
 #   # Stage_1
 # ]
-nr: 28
-train_num: "390574"
-localpath: "/data/meta/BDT/DataPass4_MCPass3/Data"
-fileName: "AO2D"
-max_workers: 32
-# Path copied from the Hyperloop `Submitted Jobs` page
-copypaths: [
-  /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829369,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829368
-]
-subpath: 'AOD'
-subfiles: 0
-copypaths_faild: [
-  # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
-]
-Stage_faild: [
-  # Stage_1
-]
+# nr: 28
+# train_num: "390574"
+# localpath: "/data/meta/BDT/DataPass4_MCPass3/Data"
+# fileName: "AO2D"
+# max_workers: 32
+# # Path copied from the Hyperloop `Submitted Jobs` page
+# copypaths: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829369,/alice/cern.ch/user/a/alihyperloop/jobs/0182/hy_1829368
+# ]
+# subpath: 'AOD'
+# subfiles: 0
+# copypaths_faild: [
+#   # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
+# ]
+# Stage_faild: [
+#   # Stage_1
+# ]
 
 # # Pass3 PbPb 20-50%cc
 # nr: 16
@@ -76,6 +76,92 @@ Stage_faild: [
 # subfiles: 0 # used to download the metadata files
 # copypaths_faild: [
 #   # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
+# ]
+# Stage_faild: [
+#   # Stage_1
+# ]
+
+# nr: 99
+# train_num: "448943"
+# localpath: "/data/meta/BDT/DataPass4_MCPass4/Data"
+# fileName: "AO2D"
+# max_workers: 32
+# # Path copied from the Hyperloop `Submitted Jobs` page
+# copypaths: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0239/hy_2399620,/alice/cern.ch/user/a/alihyperloop/jobs/0239/hy_2399619
+# ]
+# subpath: 'AOD'
+# subfiles: 0
+# copypaths_faild: [
+#   # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
+# ]
+# Stage_faild: [
+#   # Stage_1
+# ]
+
+nr: 16
+train_num: "mc_med_ITS_459444_picked"
+localpath: "/data/meta/AnRes/flow/pass4/T03_occupancy_ITS_FT0c"
+fileName: "AnalysisResults.root"
+max_workers: 32
+copypaths: ['/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499347', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499346', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499345', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499344', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499343', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499342', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499341', '/alice/cern.ch/user/a/alihyperloop/jobs/0249/hy_2499340']
+subpath: ''
+subfiles: 0
+copypaths_faild: [
+  # /alice/cern.ch/user/a/alihyperloop/jobs/0207/hy_2074059
+]
+Stage_faild: [
+  # Stage_1
+]
+
+# nr: 16
+# train_num: "data_med_FT0c_468349"
+# localpath: "/data/meta/AnRes/flow/pass4/T03_occupancy_ITS_FT0c"
+# fileName: "AnalysisResults.root"
+# max_workers: 32
+# copypaths: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579405,/alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579399,/alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579388,/alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579302,/alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579294,/alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579293,/alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579292
+# ]
+# subpath: ''
+# subfiles: 0
+# copypaths_faild: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0257/hy_2579421
+# ]
+# Stage_faild: [
+#   Stage_1
+# ]
+
+# nr: 16
+# train_num: "462529"
+# localpath: "/data/meta/AnRes/flow/NeNe/pass1"
+# fileName: "AnalysisResults.root"
+# max_workers: 32
+# copypaths: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2528473,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2528472
+# ]
+# subpath: ''
+# subfiles: 0
+# copypaths_faild: [
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2528472
+# ]
+# Stage_faild: [
+#   Stage_1
+# ]
+
+# nr: 16
+# train_num: "462297"
+# localpath: "/data/meta/BDT/DataPass4_MCPass4/Mc"
+# fileName: "AO2D.root"
+# max_workers: 32
+# copypaths: [
+
+#   /alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523842,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523841,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523840,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523839,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523838,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523836,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523835,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523834,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523833,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523832,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523831,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523830,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523829,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523828,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523827,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523826,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523825,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523824,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523823,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523822,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523821,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523820,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523819,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523818,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523817,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523816,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523815,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523814,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523813,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523812,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523811,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523810,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523809,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523808,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523807,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523806,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523805,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523804,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523803,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523802,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523801,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523800,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523799,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523798,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523797,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523796,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523793,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523792,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523791,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523790,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523789,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523788,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523787,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523786,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523785,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523784,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523783,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523782,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523781,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523780,/alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2523779
+
+# ]
+# subpath: 'AOD'
+# subfiles: 0
+# copypaths_faild: [
+#   # /alice/cern.ch/user/a/alihyperloop/jobs/0252/hy_2528472
 # ]
 # Stage_faild: [
 #   # Stage_1

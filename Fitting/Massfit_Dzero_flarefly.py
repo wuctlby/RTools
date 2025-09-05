@@ -103,15 +103,48 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
     # hPurity = ROOT.TH1F("hRawYieldsPurity", "Purity vs kstar; k* (GeV/c); Purity", n_bins, np.array(pt_bins, dtype="float64"))
     
     for iFile, inputFile in enumerate(inputFiles):
-        histoNames = load_histos(inputFile, "hist_mass", keyWord=True, onlyPath=True)
-        if len(histoNames) != nPtBins:
-            print(f"Number of histograms {len(histoNames)} in the input file {inputFile} is not equal to the number of pT bins({nPtBins}).")
-            sys.exit()
+        # histoNames = load_histos(inputFile, "fM/fM", keyWord=True, onlyPath=True)
+        # if len(histoNames) != nPtBins:
+        #     print(f"Number of histograms {len(histoNames)} in the input file {inputFile} is not equal to the number of pT bins({nPtBins}).")
+        #     sys.exit()
+        
+        if iFile != 0:
+            continue
+        
+        # histoNames = []
+        # histos = []
+        # for i, infile in enumerate(inputFiles):
+        #     file = ROOT.TFile.Open(infile)
+        #     obj = file.GetListOfKeys()
+        #     for key in obj:
+        #         print(key.GetName())
+        #         print(key.GetClassName())
+        #     tree = file.Get("fM")
+        #     hname = "h_fM"
+        #     ROOT.gDirectory.Delete(hname + ";*") 
+        #     tree.Draw(f"fM>>{hname}", "fM > 1.65 && fM < 2.15", "e1")
+        #     histo = ROOT.gDirectory.Get(hname)
+        #     histo.SetDirectory(0)
+        #     histo.SetName(f"h_fM_{i}")
+        #     histos.append(histo)
+        #     histoNames.append(histo.GetName())
+        #     file.Close()
+        # massfile = ROOT.TFile.Open(outputDir + "mass.root", "RECREATE")
+        # for histo in histos:
+        #     histo.Write()
+        # massfile.Close()
+        # inputFile = outputDir + "mass.root"
+        histoNames= []
+        for file in inputFiles:
+            infile = ROOT.TFile.Open(file)
+            histo = infile.Get("hist_inv_mass_origin_ptSmear1.5+phi_FD")
             
+            histoNames.append(histo.GetName())
+        
         for iPt, (ptmin, ptmax, histoName, MassMin, MassMax, Rebin, SgnFunc, BkgFunc) \
                 in enumerate(zip(ptmins, ptmaxs, histoNames, MassMins, MassMaxs, Rebins, SgnFuncs, BkgFuncs)):
   
-            fitter = Mass_fit_ff(inputFile, histoName, MassMin, MassMax, Rebin, SgnFunc, BkgFunc, FixSigma, FixSigmaFromFile, iPt)
+            fitter, rovers = Mass_fit_ff(inputFiles[iPt], histoName, MassMin, MassMax, Rebin, SgnFunc, BkgFunc, FixSigma, FixSigmaFromFile, iPt)
 
             # Get fit results with errors
             mean, meanError = fitter.get_mass()
@@ -120,27 +153,30 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
             significance, signifError = fitter.get_significance()
             bkg, bkgError = fitter.get_background()
             chi2ndf = fitter.get_chi2_ndf()
-            soverb, soverbError = fitter.get_signal_over_background()
-            purity = rawyield / (rawyield + bkg)
+            # soverb, soverbError = fitter.get_signal_over_background()
+            # purity = rawyield / (rawyield + bkg)
+            n, nError = fitter.get_signal_parameter(0, "n")
+            alpha, alphaError = fitter.get_signal_parameter(0, "alpha")
             
-            # Estimate correlation coefficient
-            rho = rawyieldError / bkgError
-            if rho > 1.:
-                rho = 1. / rho
+            # # Estimate correlation coefficient
+            # rho = rawyieldError / bkgError
+            # if rho > 1.:
+            #     rho = 1. / rho
         
-            # Calculate purity and its uncertainty
-            purity = rawyield / (rawyield + bkg)
-            purityError = np.sqrt(
-            (rawyieldError**2 / (rawyield + bkg)**2) +
-            (rawyield**2 * bkgError**2 / (rawyield + bkg)**4) -
-            (2 * rho * rawyield * rawyieldError * bkgError / (rawyield + bkg)**3)
-            )
+            # # Calculate purity and its uncertainty
+            # purity = rawyield / (rawyield + bkg)
+            # purityError = np.sqrt(
+            # (rawyieldError**2 / (rawyield + bkg)**2) +
+            # (rawyield**2 * bkgError**2 / (rawyield + bkg)**4) -
+            # (2 * rho * rawyield * rawyieldError * bkgError / (rawyield + bkg)**3)
+            # )
 
             latex_expr_mass = f"$\mu=$" + str(round(mean, 4)) + f"$\pm$" + str(round(meanError, 4)) + "$\;\mathrm{GeV}/c^2$"
             latex_expr_width = f"$\sigma=$" + str(round(sigma, 3)) + f"$\pm$" + str(round(sigmaError, 3)) + "$\;\mathrm{GeV}/c^2$"
             latex_expr_rawyield = r"$N_{\mathrm{D}^{\mathrm{0}}}\:=\:$" + str(int(rawyield)) + f"$\:\pm\:$" + str(int(rawyieldError))
+            latex_expr_rovers = r"$r/s\:=\:$" + str(round(rovers, 3))
             latex_expr_significance = r"$s/\sqrt{s+b}\:(3\sigma)\:=\:$" + str(round(significance, 1)) + f"$\:\pm\:$" + str(round(signifError, 1))
-            latex_expr_purity = f"Purity (s/(s+b))$\:=\:$"+str(round(purity,3))+f"$\:\pm\:$"+str(round(purityError,3))
+            # latex_expr_purity = f"Purity (s/(s+b))$\:=\:$"+str(round(purity,3))+f"$\:\pm\:$"+str(round(purityError,3))
 
             # Plot the mass fit
             plotMassFit, axse = fitter.plot_mass_fit(style="ATLAS", show_extra_info=False, extra_info_loc=['upper left', 'lower right'], axis_title=r"$M_{K\pi} (\mathrm{GeV}/c^2)$")
@@ -150,8 +186,9 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
             plotMassFit.text(0.62, 0.67, latex_expr_mass, fontsize=13)
             plotMassFit.text(0.62, 0.62, latex_expr_width, fontsize=13)
             plotMassFit.text(0.195, 0.40, latex_expr_rawyield, fontsize=15)
-            plotMassFit.text(0.195, 0.35, latex_expr_significance, fontsize=15)
-            plotMassFit.text(0.195, 0.30, latex_expr_purity, fontsize=15)
+            plotMassFit.text(0.195, 0.35, latex_expr_rovers, fontsize=15)
+            # plotMassFit.text(0.195, 0.35, latex_expr_significance, fontsize=15)
+            # plotMassFit.text(0.195, 0.30, latex_expr_purity, fontsize=15)
 
             # Save the plot for each pT bin
             plotMassFitName = f'{outputDir}/rawyield/temp_fitSpectrum_pT_{ptmin}_{ptmax}_file_{iFile}_{suffix}.pdf'
@@ -182,12 +219,20 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
             hBkg.SetBinContent(iBin, bkg)
             hBkg.SetBinError(iBin, bkgError)
 
-            hSignificance.SetBinContent(iBin, significance)
-            hSignificance.SetBinError(iBin, signifError)
+            # hSignificance.SetBinContent(iBin, significance)
+            # hSignificance.SetBinError(iBin, signifError)
             
             hChi2.SetBinContent(iBin, chi2ndf)
-            hSoverB.SetBinContent(iBin, soverb)
-            hSoverB.SetBinError(iBin, soverbError)
+            # hSoverB.SetBinContent(iBin, soverb)
+            # hSoverB.SetBinError(iBin, soverbError)
+            
+            hRoverS.SetBinContent(iBin, rovers)
+            hRoverS.SetBinError(iBin, 0.0)
+            
+            halpha.SetBinContent(iBin, alpha)
+            halpha.SetBinError(iBin, alphaError)
+            hN.SetBinContent(iBin, n)
+            hN.SetBinError(iBin, nError)
             
             # hPurity.SetBinContent(iBin, purity)
             # hPurity.SetBinError(iBin, purityError)
@@ -201,6 +246,9 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
         hSignificance.Write()
         hChi2.Write()
         hSoverB.Write()
+        hRoverS.Write()
+        halpha.Write()
+        hN.Write()
         # hPurity.Write()
         output.Close()
 
@@ -212,6 +260,9 @@ def main(config_fit, inputFiles, outputDir, cent, suffix):
         hBkg.Reset()
         hChi2.Reset()
         hSoverB.Reset()
+        hRoverS.Reset()
+        halpha.Reset()
+        hN.Reset()
         # hPurity.Reset()
 
         # Create a single PDF file from the generated PDFs

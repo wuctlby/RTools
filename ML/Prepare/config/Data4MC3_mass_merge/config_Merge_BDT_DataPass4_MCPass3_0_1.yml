@@ -1,0 +1,10 @@
+doDFMerge: false
+doFinalMerge: true
+doTableMerge: false
+inputFiles:
+- /data/meta/BDT/DataPass4_MCPass3/Data/390574
+isMC: false
+max_workers: 2
+outputName: AO2D_DATA_Pass4_0_1.root
+outputPath: /data/meta/BDT/DataPass4_MCPass3/Data/merged
+tableMergedSuffix: DataTreeForMLTrain_DataPass4_MCPass3_0_1.root

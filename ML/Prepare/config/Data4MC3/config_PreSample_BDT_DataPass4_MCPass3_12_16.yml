@@ -1,0 +1,38 @@
+dataTree: TreeForML
+data_filters:
+- fY > -0.8 && fY < 0.8
+- fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3
+- fCpa > 0.9
+hh_edge:
+- 2.1
+high_edge:
+- 1.98
+inputDataFile: ''
+inputMcFile: /data/meta/BDT/DataPass4_MCPass3/Data/merged/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_merged.root
+ll_edge:
+- 1.65
+low_edge:
+- 1.73
+mcTree: TreeForML
+mc_fd_filters:
+- fOriginMcRec==2
+- (fCandidateSelFlag == 1 && fFlagMcMatchRec == 1 || fCandidateSelFlag == 2 && fFlagMcMatchRec
+  == -1)
+- fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3
+- fY > -0.8 && fY < 0.8
+- fM > 1.65 && fM < 2.1
+- fCpa > 0.9
+mc_prompt_filters:
+- fOriginMcRec==1
+- (fCandidateSelFlag == 1 && fFlagMcMatchRec == 1 || fCandidateSelFlag == 2 && fFlagMcMatchRec
+  == -1)
+- fNSigTpcTofPiExpPi < 3 && fNSigTpcTofKaExpKa < 3
+- fY > -0.8 && fY < 0.8
+- fM > 1.65 && fM < 2.1
+- fCpa > 0.9
+outDir: /data/meta/BDT/DataPass4_MCPass3/Data/sample
+pTmaxs:
+- 16
+pTmins:
+- 12
+suffix: DataPass4_MCPass3_12_16

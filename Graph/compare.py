@@ -1,6 +1,8 @@
+import os
 import sys
 import ROOT
-sys.path.append('..')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(SCRIPT_DIR, '..'))
 from utils.Load import load_file, load_histos, load_runNumber
 from utils.compute import compute_ratio_histo
 
@@ -27,7 +29,7 @@ def compare_multi(histoNames, inputFiles):
     runNumber = ['high', 'low', 'med', 'int']
     # runNumber = load_runNumber(inputFiles)
     for iFile, histoName in enumerate(histoNames):
-        cList.append(ROOT.TCanvas(histoName, 'Resolution', 3200, 2600))
+        cList.append(ROOT.TCanvas(histoName, 'Resolution', 1600, 1200))
         cList[-1].Divide(2, 1)
         cList[-1].cd(1).SetPad(0.0, 0.0, 0.7, 1.0)
         cList[-1].cd(2).SetPad(0.65, 0.0, 1.0, 1.0)
@@ -73,7 +75,7 @@ def compare_multi(histoNames, inputFiles):
             histo.SetYTitle("#it{R}_{2} {SP}")
             histo.GetYaxis().SetTitleOffset(1)
             histo.GetYaxis().SetTitleSize(0.05)
-            histo.GetYaxis().SetRangeUser(0.6, 0.8)
+            histo.GetYaxis().SetRangeUser(0., 1.)
             histo.SetTitle("")
             leg.AddEntry(histo, runNumber[i], "l")
             if i == 0:
@@ -179,8 +181,8 @@ def doRato(inputFiles, histoNames):
         cList[-1].SaveAs(f'./{outputName}_ratio_k3050.pdf{pdfSuffix}')
 
 # configuration
-inFilePath = '/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/0100/k0100/large/sp/resolution'
-keyWord = 'resosp0100l'
+inFilePath = '/home/wuct/ALICE/local/dev/d0_v2/test/T01/pass4Wpass5Corr'
+keyWord = 'reso'
 
 histoNames = [
     "FT0c_FV0a_TPCtot/histo_reso",
@@ -197,8 +199,8 @@ histoNames = [
 inputFiles = load_file(inFilePath, keyWord)
 
 compare_multi(histoNames, inputFiles)
-inputFile_int = '/home/wuct/ALICE/local/reso/DmesonAnalysis/run3/flow/reso/Results/3050/k3050/large/sp/resolution/resosp3050l_inte_Reso.root'
-# doratio
-inputFiles = inputFile_int + inputFiles
+# inputFile_int = '/home/wuct/ALICE/local/dev/d0_v2/test/T01/pass4Wpass5Corr/reso_resospprivate.root'
+# # doratio
+# inputFiles = inputFile_int + inputFiles
 
-doRato(inputFiles, histoNames)
+# doRato(inputFiles, histoNames)

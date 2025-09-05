@@ -1,0 +1,28 @@
+# inputFiles: [
+#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_pt0_5_418439.root',
+#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing1p5_phi_pt5_36_418441.root'
+# ]
+# outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts'
+# outputName: 'AO2D_MC_Pass3_medium_ptsmearing1p5_phi.root'
+# isMC: True # True for MC, False for DATA
+
+# inputFiles: [
+#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing_pt0_5_421593.root',
+#   '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts/AO2D_MC_Pass3_medium_ptsmearing_pt5_36_418440.root'
+# ]
+# outputPath: '/media/wuct/wulby/ALICE/AnRes/D0_flow/2024/TTree/MC/cts'
+# outputName: 'AO2D_MC_Pass3_medium_ptsmearing.root'
+# isMC: True # True for MC, False for DATA
+
+# DATA
+inputFiles: [
+  /data/meta/BDT/DataPass4_MCPass4/Data
+]
+outputPath: '/data/meta/BDT/DataPass4_MCPass3/Data/merged'
+outputName: 'AO2D_DATA_Pass4.root'
+isMC: False # True for MC, False for DATA
+max_workers: 5
+doDFMerge: true
+doTableMerge: true
+tableMergedSuffix: 'DataTreeForMLTrain_DataPass4_MCPass3_0_1.root'
+doFinalMerge: True
