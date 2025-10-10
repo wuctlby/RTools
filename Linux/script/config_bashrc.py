@@ -12,6 +12,8 @@ def config_o2_path(bashrc_content, bashrc_file):
             bashrc_file.write(f'export ALIBUILD_WORK_DIR={os.environ["ALIBUILD_WORK_DIR"]}\n')
     else:
         input_path = input("Please enter the path to the O2 work directory (default: $HOME/alice/sw): ")
+        if input_path.strip() == "":
+            input_path = os.path.expanduser('~/alice/sw')
         bashrc_file.write(f'export ALIBUILD_WORK_DIR={input_path}\n')
     return bashrc_file
 
@@ -96,6 +98,17 @@ def config_Obj_alias(bashrc_content, bashrc_file):
         print("Alias 'Obj' added to .bashrc.")
     return bashrc_file
 
+def config_sc_alias(bashrc_content, bashrc_file):
+    if 'alias sc=' in bashrc_content:
+        print("Alias 'sc' already exists in .bashrc.")
+    else:
+        if not os.path.exists(os.path.join(os.path.dirname(work_dir), 'src', 'StringConvert.py')):
+            print(f"StringConvert.py not found in {work_dir}. Please ensure the file exists.")
+            exit(1)
+        bashrc_file.write(f'alias sc="python3 {os.path.join(os.path.dirname(work_dir), "src", "StringConvert.py")}"\n')
+        print("Alias 'sc' added to .bashrc.")
+    return bashrc_file
+
 def config_runtag_func(bashrc_content, bashrc_file):
     if 'runtag() {' in bashrc_content:
         print("Function 'runtag' already exists in .bashrc.")
@@ -148,21 +161,61 @@ os.system(f'cp {bashrc_path} {bashrc_path}_{time.strftime("%Y%m%d_%H%M%S")}.bak'
 with open(bashrc_path, 'r') as f:
     bashrc_content = f.read()
 
-with open(bashrc_path, 'a') as bashrc_file:
-    bashrc_file.write('\n# O2 development environment configuration\n')
+start_marker = '# O2 development environment configuration'
+end_marker = '# End of O2 development environment configuration'
+new_content = bashrc_content
 
-    # Add configurations of O2-related part to .bashrc
-    bashrc_file = config_o2_path(bashrc_content, bashrc_file)
-    bashrc_file = config_ae_alias(bashrc_content, bashrc_file)
-    bashrc_file = config_funcO2(bashrc_content, bashrc_file)
-    bashrc_file = config_funcDPG(bashrc_content, bashrc_file)
-    bashrc_file = config_funcO2list(bashrc_content, bashrc_file)
+if start_marker in bashrc_content and end_marker in bashrc_content:
+    print("O2 development environment configuration already exists in .bashrc. Replacing it.")
+    start_idx = bashrc_content.find(start_marker)
+    end_idx = bashrc_content.find(end_marker, start_idx)
+    if end_idx != -1:
+        end_idx += len(end_marker)
+        # remove a following newline if present
+        if end_idx < len(bashrc_content) and bashrc_content[end_idx] == '\n':
+            end_idx += 1
+        new_content = bashrc_content[:start_idx] + bashrc_content[end_idx:]
+    # overwrite the file with the cleaned content and then add the new configuration block
+    with open(bashrc_path, 'w') as bashrc_file:
+        bashrc_file.write(new_content)
+        if not new_content.endswith('\n'):
+            bashrc_file.write('\n')
+        bashrc_file.write('\n# O2 development environment configuration\n')
 
-    # Add configuration of RTool-related part to .bashrc
-    bashrc_file = config_Obj_alias(bashrc_content, bashrc_file)
-    # bashrc_file = config_runtag_func(bashrc_content, bashrc_file)
-    # bashrc_file = config_killtag_func(bashrc_content, bashrc_file)
+        # Add configurations of O2-related part to .bashrc
+        bashrc_file = config_o2_path(new_content, bashrc_file)
+        bashrc_file = config_ae_alias(new_content, bashrc_file)
+        bashrc_file = config_funcO2(new_content, bashrc_file)
+        bashrc_file = config_funcDPG(new_content, bashrc_file)
+        bashrc_file = config_funcO2list(new_content, bashrc_file)
 
-    bashrc_file.write('\n# End of O2 development environment configuration\n')
+        # Add configuration of RTool-related part to .bashrc
+        bashrc_file = config_Obj_alias(new_content, bashrc_file)
+        bashrc_file = config_sc_alias(new_content, bashrc_file)
+        # bashrc_file = config_runtag_func(new_content, bashrc_file)
+        # bashrc_file = config_killtag_func(new_content, bashrc_file)
+
+        bashrc_file.write('\n# End of O2 development environment configuration\n')
+
+    print(f"Configuration updated in {bashrc_path}. \nPlease restart your terminal or run 'source {bashrc_path}' to apply the changes.")
+else:
+    # append the configuration block if it does not exist
+    with open(bashrc_path, 'a') as bashrc_file:
+        bashrc_file.write('\n# O2 development environment configuration\n')
+
+        # Add configurations of O2-related part to .bashrc
+        bashrc_file = config_o2_path(bashrc_content, bashrc_file)
+        bashrc_file = config_ae_alias(bashrc_content, bashrc_file)
+        bashrc_file = config_funcO2(bashrc_content, bashrc_file)
+        bashrc_file = config_funcDPG(bashrc_content, bashrc_file)
+        bashrc_file = config_funcO2list(bashrc_content, bashrc_file)
+
+        # Add configuration of RTool-related part to .bashrc
+        bashrc_file = config_Obj_alias(bashrc_content, bashrc_file)
+        bashrc_file = config_sc_alias(bashrc_content, bashrc_file)
+        # bashrc_file = config_runtag_func(bashrc_content, bashrc_file)
+        # bashrc_file = config_killtag_func(bashrc_content, bashrc_file)
+
+        bashrc_file.write('\n# End of O2 development environment configuration\n')
 
     print(f"Configuration added to {bashrc_path}. \nPlease restart your terminal or run 'source {bashrc_path}' to apply the changes.")
