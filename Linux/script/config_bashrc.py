@@ -53,10 +53,10 @@ def config_funcDPG(bashrc_content, bashrc_file):
 funcDPG() {
     if [ -z "$1" ]; then
         echo "Entering O2DPG default version"
-        alienv enter O2/latest O2DPG/latest O2sim/latest
+        alienv enter O2/latest O2DPG/latest
     else
         echo "Entering O2DPG version $1"
-        alienv enter O2/latest O2DPG/latest-"$1"-o2 O2sim/latest
+        alienv enter O2/latest O2DPG/latest-"$1"-o2
     fi
 }
 export -f funcDPG
