@@ -22,7 +22,6 @@ def convert(String):
     # Decode URL-encoded string
     s = urlparse(s).path
     s = unquote(s)
-    print(f"Decoded path: {s}")
 
     # remove slashes at the beginning if exists
     while s.startswith('/'):
