@@ -1,7 +1,9 @@
 #%%
+from curses import echo
 from urllib.parse import urlparse, unquote
 import argparse
 import re
+import os
 
 def convert(String):
     """
@@ -69,4 +71,8 @@ if __name__ == "__main__":
                         default="string_to_convert", help="the path you want to convert to linux format")
     args = parser.parse_args()
 
-    print(convert(args.String))
+    temp_path = convert(args.String)
+    print(temp_path)
+    # print(f"export TEMPP='{temp_path}'")
+    # eval $(python your_script.py)
+
