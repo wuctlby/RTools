@@ -1,4 +1,5 @@
 #%%
+from urllib.parse import urlparse, unquote
 import argparse
 import re
 
@@ -17,6 +18,15 @@ def convert(String):
     s = String.strip()
     if s == "":
         return ""
+
+    # Decode URL-encoded string
+    s = urlparse(s).path
+    s = unquote(s)
+    print(f"Decoded path: {s}")
+
+    # remove slashes at the beginning if exists
+    while s.startswith('/'):
+        s = s[1:]
 
     # Normalize backslashes to slashes
     s = s.replace('\\', '/')
