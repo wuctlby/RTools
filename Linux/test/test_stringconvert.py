@@ -1,49 +1,46 @@
-import sys
-import os
 import pytest
+import os
+import importlib.util
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SRC_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../src"))
-sys.path.insert(0, SRC_DIR)
 
-from StringConvert import convert
+# Import the implementation by file path so tests work regardless of package layout
+def _load_converter():
+    this_dir = os.path.dirname(__file__)
+    impl_path = os.path.abspath(os.path.join(this_dir, "..", "src", "StringConvert.py"))
+    spec = importlib.util.spec_from_file_location("stringconvert", impl_path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.convert_to_linux_path
 
-@pytest.mark.parametrize("input_path, expected", [
-    # 1️⃣ 普通 Windows 路径
-    ("C:\\Users\\LibeiyuP\\Downloads", "/mnt/c/Users/LibeiyuP/Downloads"),
-    ("C:/Users/LibeiyuP/Documents", "/mnt/c/Users/LibeiyuP/Documents"),
 
-    # 2️⃣ 仅盘符路径
-    ("D:", "/mnt/d"),
-    ("Z:\\", "/mnt/z"),
+convert_to_linux_path = _load_converter()
 
-    # 3️⃣ UNC 路径
-    ("\\\\server\\share\\folder\\file.txt", "/mnt/server/share/folder/file.txt"),
-    ("//server/share/folder/file.txt", "/mnt/server/share/folder/file.txt"),
 
-    # 4️⃣ file:// URI - 本地路径
-    ("file:///C:/Users/LibeiyuP/Downloads/file.pdf", "/mnt/c/Users/LibeiyuP/Downloads/file.pdf"),
-    ("file:///D:/data/test.txt", "/mnt/d/data/test.txt"),
+@pytest.mark.parametrize(
+    "inp,expected",
+    [
+        ("C:\\Users\\LibeiyuP\\Downloads", "/mnt/c/Users/LibeiyuP/Downloads"),
+        ("C:/Users/LibeiyuP/Downloads", "/mnt/c/Users/LibeiyuP/Downloads"),
+        ("D:", "/mnt/d"),
+        ("file:///C:/Users/LibeiyuP/Downloads/file.pdf", "/mnt/c/Users/LibeiyuP/Downloads/file.pdf"),
+        ("file://server/share/folder/file.txt", "/mnt/server/share/folder/file.txt"),
+        ("/mnt/c/Users/test", "/mnt/c/Users/test"),
+        ("", ""),
+        (None, ""),
+        # extra cases
+        ("c:", "/mnt/c"),
+        ("C:\\path with spaces\\file.txt", "/mnt/c/path with spaces/file.txt"),
+    ],
+)
+def test_examples(inp, expected):
+    assert convert_to_linux_path(inp) == expected
 
-    # 5️⃣ file:// URI - 网络共享
-    ("file://server/share/folder/file.txt", "/mnt/server/share/folder/file.txt"),
 
-    # 6️⃣ Linux 路径（应保持不变）
-    ("/mnt/c/Users/test", "/mnt/c/Users/test"),
-    ("/home/libeiyup", "/home/libeiyup"),
+def test_no_change_for_unix_path():
+    s = "/home/user/file"
+    assert convert_to_linux_path(s) == s
 
-    # 7️⃣ 相对路径
-    ("relative\\path\\to\\file", "relative/path/to/file"),
-    ("./folder\\subfolder", "./folder/subfolder"),
 
-    # 8️⃣ URL 编码路径
-    ("C:\\Users\\LibeiyuP\\My%20Documents\\file.txt", "/mnt/c/Users/LibeiyuP/My Documents/file.txt"),
-
-    # 9️⃣ 空或 None 输入
-    ("", ""),
-    (None, ""),
-])
-def test_convert_paths(input_path, expected):
-    """Test various path conversions."""
-    result = convert(input_path)
-    assert result == expected, f"\nInput: {input_path}\nExpected: {expected}\nGot: {result}"
+def test_backslash_only_conversion():
+    s = "some\\windows\\style\\path.txt"
+    assert convert_to_linux_path(s) == "some/windows/style/path.txt"

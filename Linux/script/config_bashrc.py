@@ -99,13 +99,24 @@ def config_Obj_alias(bashrc_content, bashrc_file):
     return bashrc_file
 
 def config_sc_alias(bashrc_content, bashrc_file):
-    if 'alias sc=' in bashrc_content:
-        print("Alias 'sc' already exists in .bashrc.")
+    if 'funcsc() {' in bashrc_content:
+        print("Function 'funcsc' already exists in .bashrc.")
     else:
         if not os.path.exists(os.path.join(os.path.dirname(work_dir), 'src', 'StringConvert.py')):
             print(f"StringConvert.py not found in {work_dir}. Please ensure the file exists.")
             exit(1)
-        bashrc_file.write(f'alias sc="python3 {os.path.join(os.path.dirname(work_dir), "src", "StringConvert.py")}"\n')
+        bashrc_file.write(f'''
+funcsc() {{
+    if [ -z "$1" ]; then
+        echo "please provide the string to convert"
+        return 1
+    else
+        python3 {os.path.join(os.path.dirname(work_dir), "src", "StringConvert.py")} "$1"
+    fi
+}}
+export -f funcsc
+alias sc=funcsc
+''')
         print("Alias 'sc' added to .bashrc.")
     return bashrc_file
 
